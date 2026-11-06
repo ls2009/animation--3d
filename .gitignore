@@ -1,0 +1,32 @@
+# Node
+node_modules/
+.pnpm-store/
+*.tsbuildinfo
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+uv.lock.tmp
+
+# Env — never commit secrets
+.env
+.env.*
+!.env.example
+
+# Build artifacts / outputs
+dist/
+coverage/
+keyframes-out/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
