@@ -5,12 +5,23 @@
   "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./fingerprint": "./src/fingerprint.ts",
+    "./schema.json": "./schema.json"
+  },
   "scripts": {
-    "lint": "eslint src tests --max-warnings 0",
+    "lint": "eslint src tests scripts --max-warnings 0",
     "test": "vitest run",
-    "build": "tsc --noEmit"
+    "build": "tsc --noEmit",
+    "gen": "tsx scripts/gen-json-schema.ts"
   },
   "dependencies": {
     "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "tsx": "^4.19.2",
+    "zod-to-json-schema": "^3.23.5"
   }
 }

@@ -1,0 +1,735 @@
+{
+  "$ref": "#/definitions/SceneScript",
+  "definitions": {
+    "SceneScript": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "1.0"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "language": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 12
+        },
+        "camera": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "z": {
+              "type": "number"
+            },
+            "look": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "z": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "z"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "x",
+            "y",
+            "z",
+            "look"
+          ],
+          "additionalProperties": false
+        },
+        "actors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 24,
+                "pattern": "^[a-z0-9][a-z0-9_-]*$"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "prop",
+                  "text"
+                ],
+                "default": "prop"
+              },
+              "prop": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string",
+                "maxLength": 80,
+                "default": ""
+              },
+              "color": {
+                "type": "string",
+                "description": "Palette key a|b|c|d|e|f|g|o or literal #rrggbb",
+                "default": "f"
+              },
+              "x": {
+                "type": "number",
+                "default": 0
+              },
+              "y": {
+                "type": "number",
+                "default": 0
+              },
+              "z": {
+                "type": "number",
+                "default": 0
+              },
+              "size": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 30,
+                "default": 2
+              },
+              "hidden": {
+                "type": "boolean",
+                "default": false
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 24
+        },
+        "scenes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "duration": {
+                "type": "number",
+                "minimum": 3,
+                "maximum": 60
+              },
+              "backdrop": {
+                "type": "string",
+                "enum": [
+                  "lab",
+                  "nature",
+                  "space",
+                  "plain"
+                ],
+                "default": "lab"
+              },
+              "beat": {
+                "type": "string",
+                "maxLength": 300,
+                "default": ""
+              },
+              "narration": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "t": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 400
+                    }
+                  },
+                  "required": [
+                    "t",
+                    "text"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 6,
+                "default": []
+              },
+              "keyFact": {
+                "type": "string",
+                "maxLength": 300,
+                "default": ""
+              },
+              "steps": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "action": {
+                          "type": "string",
+                          "const": "show"
+                        },
+                        "actor": {
+                          "$ref": "#/definitions/SceneScript/properties/actors/items/properties/id"
+                        },
+                        "t": {
+                          "type": "number",
+                          "minimum": 0,
+                          "description": "Seconds from scene start"
+                        },
+                        "dur": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 60,
+                          "default": 1
+                        }
+                      },
+                      "required": [
+                        "action",
+                        "actor",
+                        "t"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "action": {
+                          "type": "string",
+                          "const": "hide"
+                        },
+                        "actor": {
+                          "$ref": "#/definitions/SceneScript/properties/actors/items/properties/id"
+                        },
+                        "t": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/t"
+                        },
+                        "dur": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/dur"
+                        }
+                      },
+                      "required": [
+                        "action",
+                        "actor",
+                        "t"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "action": {
+                          "type": "string",
+                          "const": "move"
+                        },
+                        "actor": {
+                          "$ref": "#/definitions/SceneScript/properties/actors/items/properties/id"
+                        },
+                        "to": {
+                          "$ref": "#/definitions/SceneScript/properties/camera/properties/look"
+                        },
+                        "t": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/t"
+                        },
+                        "dur": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/dur"
+                        }
+                      },
+                      "required": [
+                        "action",
+                        "actor",
+                        "to",
+                        "t"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "action": {
+                          "type": "string",
+                          "const": "grow"
+                        },
+                        "actor": {
+                          "$ref": "#/definitions/SceneScript/properties/actors/items/properties/id"
+                        },
+                        "to": {
+                          "type": "number",
+                          "exclusiveMinimum": 0,
+                          "maximum": 30
+                        },
+                        "t": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/t"
+                        },
+                        "dur": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/dur"
+                        }
+                      },
+                      "required": [
+                        "action",
+                        "actor",
+                        "to",
+                        "t"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "action": {
+                          "type": "string",
+                          "const": "pulse"
+                        },
+                        "actor": {
+                          "$ref": "#/definitions/SceneScript/properties/actors/items/properties/id"
+                        },
+                        "scale": {
+                          "type": "number",
+                          "minimum": 1,
+                          "maximum": 3,
+                          "default": 1.15
+                        },
+                        "times": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 12,
+                          "default": 3
+                        },
+                        "t": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/t"
+                        },
+                        "dur": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/dur"
+                        }
+                      },
+                      "required": [
+                        "action",
+                        "actor",
+                        "t"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "action": {
+                          "type": "string",
+                          "const": "rotate"
+                        },
+                        "actor": {
+                          "$ref": "#/definitions/SceneScript/properties/actors/items/properties/id"
+                        },
+                        "axis": {
+                          "type": "string",
+                          "enum": [
+                            "x",
+                            "y",
+                            "z"
+                          ],
+                          "default": "y"
+                        },
+                        "turns": {
+                          "type": "number",
+                          "minimum": -50,
+                          "maximum": 50,
+                          "default": 1
+                        },
+                        "t": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/t"
+                        },
+                        "dur": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/dur"
+                        }
+                      },
+                      "required": [
+                        "action",
+                        "actor",
+                        "t"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "action": {
+                          "type": "string",
+                          "const": "highlight"
+                        },
+                        "actor": {
+                          "$ref": "#/definitions/SceneScript/properties/actors/items/properties/id"
+                        },
+                        "t": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/t"
+                        },
+                        "dur": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/dur"
+                        }
+                      },
+                      "required": [
+                        "action",
+                        "actor",
+                        "t"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "action": {
+                          "type": "string",
+                          "const": "shake"
+                        },
+                        "actor": {
+                          "$ref": "#/definitions/SceneScript/properties/actors/items/properties/id"
+                        },
+                        "amplitude": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 5,
+                          "default": 0.3
+                        },
+                        "t": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/t"
+                        },
+                        "dur": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/dur"
+                        }
+                      },
+                      "required": [
+                        "action",
+                        "actor",
+                        "t"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "action": {
+                          "type": "string",
+                          "const": "label"
+                        },
+                        "actor": {
+                          "$ref": "#/definitions/SceneScript/properties/actors/items/properties/id"
+                        },
+                        "text": {
+                          "type": "string",
+                          "maxLength": 80
+                        },
+                        "t": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/t"
+                        },
+                        "dur": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/dur"
+                        }
+                      },
+                      "required": [
+                        "action",
+                        "actor",
+                        "text",
+                        "t"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "action": {
+                          "type": "string",
+                          "const": "count"
+                        },
+                        "actor": {
+                          "$ref": "#/definitions/SceneScript/properties/actors/items/properties/id"
+                        },
+                        "from": {
+                          "type": "number"
+                        },
+                        "to": {
+                          "type": "number"
+                        },
+                        "prefix": {
+                          "type": "string",
+                          "maxLength": 20,
+                          "default": ""
+                        },
+                        "suffix": {
+                          "type": "string",
+                          "maxLength": 20,
+                          "default": ""
+                        },
+                        "t": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/t"
+                        },
+                        "dur": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/dur"
+                        }
+                      },
+                      "required": [
+                        "action",
+                        "actor",
+                        "from",
+                        "to",
+                        "t"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "action": {
+                          "type": "string",
+                          "const": "color"
+                        },
+                        "actor": {
+                          "$ref": "#/definitions/SceneScript/properties/actors/items/properties/id"
+                        },
+                        "to": {
+                          "$ref": "#/definitions/SceneScript/properties/actors/items/properties/color"
+                        },
+                        "t": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/t"
+                        },
+                        "dur": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/dur"
+                        }
+                      },
+                      "required": [
+                        "action",
+                        "actor",
+                        "to",
+                        "t"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "action": {
+                          "type": "string",
+                          "const": "flow"
+                        },
+                        "from": {
+                          "$ref": "#/definitions/SceneScript/properties/actors/items/properties/id"
+                        },
+                        "to": {
+                          "$ref": "#/definitions/SceneScript/properties/actors/items/properties/id"
+                        },
+                        "count": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 60,
+                          "default": 8
+                        },
+                        "shape": {
+                          "type": "string",
+                          "enum": [
+                            "sphere",
+                            "cube",
+                            "drop"
+                          ],
+                          "default": "sphere"
+                        },
+                        "color": {
+                          "$ref": "#/definitions/SceneScript/properties/actors/items/properties/color",
+                          "default": "c",
+                          "description": "Palette key a|b|c|d|e|f|g|o or literal #rrggbb"
+                        },
+                        "t": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/t"
+                        },
+                        "dur": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/dur"
+                        }
+                      },
+                      "required": [
+                        "action",
+                        "from",
+                        "to",
+                        "t"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "action": {
+                          "type": "string",
+                          "const": "camera"
+                        },
+                        "to": {
+                          "$ref": "#/definitions/SceneScript/properties/camera/properties/look"
+                        },
+                        "look": {
+                          "$ref": "#/definitions/SceneScript/properties/camera/properties/look"
+                        },
+                        "t": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/t"
+                        },
+                        "dur": {
+                          "$ref": "#/definitions/SceneScript/properties/scenes/items/properties/steps/items/anyOf/0/properties/dur"
+                        }
+                      },
+                      "required": [
+                        "action",
+                        "to",
+                        "look",
+                        "t"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "maxItems": 12,
+                "default": []
+              }
+            },
+            "required": [
+              "title",
+              "duration"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 9
+        },
+        "controls": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 24
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              },
+              "min": {
+                "type": "number"
+              },
+              "max": {
+                "type": "number"
+              },
+              "default": {
+                "type": "number"
+              },
+              "binds": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "actor": {
+                      "$ref": "#/definitions/SceneScript/properties/actors/items/properties/id"
+                    },
+                    "property": {
+                      "type": "string",
+                      "enum": [
+                        "speed",
+                        "scale",
+                        "count",
+                        "visible"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "actor",
+                    "property"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1,
+                "maxItems": 6
+              }
+            },
+            "required": [
+              "id",
+              "label",
+              "min",
+              "max",
+              "default",
+              "binds"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 6,
+          "default": []
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "question": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "minItems": 2,
+                "maxItems": 5
+              },
+              "answer": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "explain": {
+                "type": "string",
+                "maxLength": 400,
+                "default": ""
+              }
+            },
+            "required": [
+              "question",
+              "options",
+              "answer"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 6,
+          "default": []
+        }
+      },
+      "required": [
+        "version",
+        "title",
+        "language",
+        "camera",
+        "actors",
+        "scenes"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

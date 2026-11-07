@@ -1,8 +1,8 @@
 /**
- * @sinaa/dsl — scene-script DSL schema (source of truth).
- *
- * Phase 0 stub. The Zod schema for DSL v1 (actors, scenes, steps, controls,
- * beats, checks) and the generated JSON Schema arrive in Phase 1, ported from
- * reference/prototype.html and extended per the DSL v1 spec.
+ * @sinaa/dsl — scene-script DSL v1: schema source of truth.
+ * Shared by the engine (validator, player) and the pipeline (prompts).
  */
-export const DSL_VERSION = "1.0";
+export * from "./palette";
+export * from "./schema";
+// The fingerprint helper uses node:crypto and is server-only:
+// import it from "@sinaa/dsl/fingerprint".
