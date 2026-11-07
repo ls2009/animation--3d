@@ -9,7 +9,11 @@
   "scripts": {
     "lint": "pnpm -r lint",
     "test": "pnpm -r test",
-    "build": "pnpm -r build"
+    "build": "pnpm -r build",
+    "keyframes": "pnpm --filter @sinaa/headless run keyframes"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild", "gl"]
   },
   "devDependencies": {
     "@eslint/js": "^9.14.0",

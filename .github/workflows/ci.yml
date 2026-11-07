@@ -16,8 +16,11 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: sudo apt-get update && sudo apt-get install -y xvfb
+      - run: pnpm --filter @sinaa/headless exec playwright install --with-deps chromium
       - run: pnpm -r lint
-      - run: pnpm -r test
+      # xvfb gives headless-gl a real GL context so both keyframe backends run.
+      - run: xvfb-run -a pnpm -r test
       - run: pnpm --filter web build
 
   api:

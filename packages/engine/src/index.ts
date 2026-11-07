@@ -39,4 +39,18 @@ export type { PropMeta, PropDomain } from "./props/meta";
 export { createPlayer } from "./player";
 export type { Player, PlayerEvents, PlayerOptions } from "./player";
 
+export { createOffscreenStage } from "./offscreen";
+export type { OffscreenStage } from "./offscreen";
+export {
+  BACKDROPS,
+  addStageLights,
+  addStageFloor,
+  applyBackdrop,
+  applyActorVisuals,
+  mountStageActors,
+  unmountStageActors,
+  createFlowPool,
+} from "./stage";
+export type { StageActorNode, FlowPool } from "./stage";
+
 export { BUILTIN_LESSONS } from "./lessons";

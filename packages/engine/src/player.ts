@@ -3,24 +3,24 @@
  * validated scene script. The engine never calls a model and makes zero
  * network calls; everything it needs is in the script object.
  *
- * Rendering is a thin shell over computeState: every frame maps the pure
- * state onto three.js objects, so playback, scrubbing and the headless
- * renderer all agree by construction.
+ * Rendering is a thin shell over computeState + the shared stage module
+ * (stage.ts), so playback, scrubbing and the headless keyframe renderer
+ * agree by construction.
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { type Script, resolveColor } from "@sinaa/dsl";
+import type { Script } from "@sinaa/dsl";
 import { computeState, type ControlValues, type SceneState } from "./state";
-import { buildProp, PROP_META } from "./props/registry";
-
-const BACKDROPS: Record<string, { bg: string; floor: string }> = {
-  lab: { bg: "#10141c", floor: "#1c2330" },
-  nature: { bg: "#0e1a14", floor: "#16271d" },
-  space: { bg: "#070711", floor: "#101022" },
-  plain: { bg: "#15151a", floor: "#202028" },
-};
-
-const metaHeight = new Map(PROP_META.map((m) => [m.name, m.height]));
+import {
+  addStageFloor,
+  addStageLights,
+  applyActorVisuals,
+  applyBackdrop,
+  createFlowPool,
+  mountStageActors,
+  unmountStageActors,
+  type StageActorNode,
+} from "./stage";
 
 export interface PlayerOptions {
   /** Start with narration spoken aloud (SpeechSynthesis). Default false. */
@@ -57,14 +57,6 @@ export interface Player {
   dispose(): void;
 }
 
-interface ActorNode {
-  group: THREE.Group;
-  baseSize: number;
-  nominal: number;
-  labelEl: HTMLDivElement;
-  kind: "prop" | "text";
-}
-
 export function createPlayer(
   canvas: HTMLCanvasElement,
   labelsEl: HTMLElement,
@@ -77,21 +69,9 @@ export function createPlayer(
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 500);
   camera.position.set(14, 12, 30);
 
-  const ambient = new THREE.AmbientLight(0xffffff, 0.55);
-  const key = new THREE.DirectionalLight(0xffffff, 1.4);
-  key.position.set(10, 18, 12);
-  const fill = new THREE.DirectionalLight(0x8899ff, 0.4);
-  fill.position.set(-12, 8, -10);
-  scene3.add(ambient, key, fill);
-
-  const floor = new THREE.Mesh(
-    new THREE.CircleGeometry(34, 48),
-    new THREE.MeshStandardMaterial({ color: "#1c2330", roughness: 0.95 }),
-  );
-  floor.rotation.x = -Math.PI / 2;
-  floor.position.y = -0.01;
-  const grid = new THREE.GridHelper(60, 30, 0x2c3648, 0x222a3a);
-  scene3.add(floor, grid);
+  addStageLights(scene3);
+  const floor = addStageFloor(scene3);
+  const flowPool = createFlowPool(scene3);
 
   const orbit = new OrbitControls(camera, canvas);
   orbit.enableDamping = true;
@@ -102,33 +82,15 @@ export function createPlayer(
     userOrbiting = true;
   });
 
-  // Flow particle pool.
-  const FLOW_POOL = 80;
-  const flowGeoms = {
-    sphere: new THREE.SphereGeometry(0.22, 10, 10),
-    cube: new THREE.BoxGeometry(0.32, 0.32, 0.32),
-    drop: new THREE.ConeGeometry(0.2, 0.45, 10),
-  };
-  const flowMeshes: THREE.Mesh[] = [];
-  for (let i = 0; i < FLOW_POOL; i++) {
-    const m = new THREE.Mesh(
-      flowGeoms.sphere,
-      new THREE.MeshStandardMaterial({ transparent: true, opacity: 0.9, roughness: 0.4 }),
-    );
-    m.visible = false;
-    scene3.add(m);
-    flowMeshes.push(m);
-  }
-
   let script: Script | undefined;
-  let actorNodes = new Map<string, ActorNode>();
+  let actorNodes = new Map<string, StageActorNode>();
+  let labelEls = new Map<string, HTMLDivElement>();
   let sceneIndex = 0;
   let sceneTime = 0;
   let playing = false;
   let voiceOn = options.voice ?? false;
   let controlValues: ControlValues = {};
   let spokenUpTo = -1;
-  let lastBackdrop = "";
   let disposed = false;
 
   const listeners: { [K in keyof PlayerEvents]: Set<PlayerEvents[K]> } = {
@@ -141,21 +103,15 @@ export function createPlayer(
   };
 
   function clearActors(): void {
-    for (const node of actorNodes.values()) {
-      scene3.remove(node.group);
-      node.labelEl.remove();
-    }
-    actorNodes = new Map();
+    unmountStageActors(scene3, actorNodes);
+    for (const el of labelEls.values()) el.remove();
+    labelEls = new Map();
   }
 
   function mountScript(s: Script): void {
     clearActors();
+    actorNodes = mountStageActors(scene3, s);
     for (const actor of s.actors) {
-      const group = actor.kind === "prop" ? buildProp(actor.prop ?? "block", resolveColor(actor.color)) : new THREE.Group();
-      const nominal = actor.kind === "prop" ? (metaHeight.get(actor.prop ?? "block") ?? 2) : 1;
-      group.position.set(actor.x, actor.y, actor.z);
-      scene3.add(group);
-
       const labelEl = document.createElement("div");
       labelEl.className = "sinaa-label";
       labelEl.style.position = "absolute";
@@ -163,14 +119,7 @@ export function createPlayer(
       labelEl.style.pointerEvents = "none";
       labelEl.style.whiteSpace = "nowrap";
       labelsEl.appendChild(labelEl);
-
-      actorNodes.set(actor.id, {
-        group,
-        baseSize: actor.size,
-        nominal,
-        labelEl,
-        kind: actor.kind,
-      });
+      labelEls.set(actor.id, labelEl);
     }
   }
 
@@ -198,44 +147,18 @@ export function createPlayer(
   function applyState(state: SceneState): void {
     if (!script) return;
     const scene = script.scenes[sceneIndex]!;
-
-    if (scene.backdrop !== lastBackdrop) {
-      lastBackdrop = scene.backdrop;
-      const bd = BACKDROPS[scene.backdrop] ?? BACKDROPS.lab!;
-      scene3.background = new THREE.Color(bd.bg);
-      (floor.material as THREE.MeshStandardMaterial).color.set(bd.floor);
-    }
+    applyBackdrop(scene3, floor, scene.backdrop);
 
     const rect = canvas.getBoundingClientRect();
 
     for (const [id, node] of actorNodes) {
       const a = state.actors[id];
       if (!a) continue;
-      node.group.position.set(a.x, a.y, a.z);
-      node.group.rotation.set(a.rotation.x, a.rotation.y, a.rotation.z);
-      const factor = (node.baseSize / node.nominal) * a.scale;
-      node.group.scale.setScalar(factor);
-      node.group.visible = a.opacity > 0.01;
-
-      node.group.traverse((obj) => {
-        const mesh = obj as THREE.Mesh;
-        if (!mesh.isMesh) return;
-        const mat = mesh.material as THREE.MeshStandardMaterial;
-        if (!mat) return;
-        mat.opacity = a.opacity * (mat.userData.baseOpacity ?? storeBaseOpacity(mat));
-        if (mesh.userData.tinted) {
-          mat.color.set(a.color);
-          mat.emissiveIntensity = 1;
-          const base = mat.userData.baseEmissive ?? storeBaseEmissive(mat);
-          mat.emissive.set(base);
-          if (a.highlight > 0) {
-            mat.emissive.lerp(new THREE.Color("#ffffff"), a.highlight * 0.45);
-          }
-        }
-      });
+      applyActorVisuals(node, a);
 
       // Label (HTML overlay).
-      const el = node.labelEl;
+      const el = labelEls.get(id);
+      if (!el) continue;
       const text = a.labelValue ? `${a.label} ${a.labelValue}`.trim() : a.label;
       if (!text || a.opacity < 0.05) {
         el.style.display = "none";
@@ -254,35 +177,13 @@ export function createPlayer(
       }
     }
 
-    // Flows.
-    let fi = 0;
-    for (const particle of state.flows) {
-      if (fi >= FLOW_POOL) break;
-      const m = flowMeshes[fi++]!;
-      m.visible = true;
-      m.geometry = flowGeoms[particle.shape];
-      m.position.set(particle.x, particle.y, particle.z);
-      const mat = m.material as THREE.MeshStandardMaterial;
-      mat.color.set(particle.color);
-      mat.opacity = 0.25 + 0.75 * Math.sin(particle.progress * Math.PI);
-    }
-    for (; fi < FLOW_POOL; fi++) flowMeshes[fi]!.visible = false;
+    flowPool.apply(state.flows);
 
     // Scripted camera, unless the learner has grabbed the orbit.
     if (!userOrbiting) {
       camera.position.set(state.camera.x, state.camera.y, state.camera.z);
       orbit.target.set(state.camera.look.x, state.camera.look.y, state.camera.look.z);
     }
-  }
-
-  function storeBaseOpacity(mat: THREE.MeshStandardMaterial): number {
-    mat.userData.baseOpacity = mat.opacity;
-    return mat.opacity;
-  }
-  function storeBaseEmissive(mat: THREE.MeshStandardMaterial): string {
-    const hex = `#${mat.emissive.getHexString()}`;
-    mat.userData.baseEmissive = hex;
-    return hex;
   }
 
   let lastFrame = 0;
@@ -344,7 +245,6 @@ export function createPlayer(
     load(s: Script): void {
       script = s;
       controlValues = Object.fromEntries(s.controls.map((c) => [c.id, c.default]));
-      lastBackdrop = "";
       mountScript(s);
       setScene(0, 0, false);
       emit("scene", 0);
@@ -402,6 +302,7 @@ export function createPlayer(
       disposed = true;
       cancelSpeech();
       clearActors();
+      flowPool.dispose();
       orbit.dispose();
       renderer.dispose();
     },
