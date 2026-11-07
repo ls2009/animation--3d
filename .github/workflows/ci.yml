@@ -35,6 +35,14 @@ jobs:
         with:
           enable-cache: true
           cache-dependency-glob: apps/api/uv.lock
+      # The validator bridge tests shell out to the engine's TS validator.
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+        working-directory: .
       - run: uv sync
       - run: uv run ruff check .
       - run: uv run pytest

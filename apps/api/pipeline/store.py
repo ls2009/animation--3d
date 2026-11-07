@@ -1,0 +1,356 @@
+"""Thin store interface + two implementations.
+
+The pipeline depends ONLY on this interface (plus the Anthropic SDK and the
+DSL schema), so Course AI can implement it against its own tables and the
+crew code moves unchanged.
+
+- SupabaseStore: the production store (service role; RLS bypassed server-side).
+- SqliteStore: local fallback used until Supabase credentials exist, and in
+  tests. Same event-sourced discipline: lesson_events is append-only.
+"""
+
+from __future__ import annotations
+
+import json
+import sqlite3
+import threading
+import uuid
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any, Protocol
+
+STATUSES = (
+    "queued",
+    "directing",
+    "designing",
+    "choreographing",
+    "inspecting",
+    "ready",
+    "failed",
+)
+
+EVENT_KINDS = (
+    "generation_started",
+    "agent_call",
+    "validator_repairs",
+    "inspection",
+    "ready",
+    "failed",
+    "feedback",
+)
+
+
+@dataclass
+class Lesson:
+    id: str
+    fingerprint: str
+    topic: str
+    audience: str
+    language: str
+    status: str
+    script_version: str | None
+    current_script: dict[str, Any] | None
+    created_at: str
+
+
+class Store(Protocol):
+    def create_lesson(
+        self, fingerprint: str, topic: str, audience: str, language: str
+    ) -> Lesson: ...
+
+    def get_lesson(self, lesson_id: str) -> Lesson | None: ...
+
+    def get_lesson_by_fingerprint(self, fingerprint: str) -> Lesson | None: ...
+
+    def set_status(self, lesson_id: str, status: str) -> None: ...
+
+    def save_script(self, lesson_id: str, script: dict[str, Any], version: str) -> None: ...
+
+    def save_event(
+        self,
+        lesson_id: str,
+        kind: str,
+        *,
+        role: str | None = None,
+        prompt_version: str | None = None,
+        model: str | None = None,
+        input_tokens: int | None = None,
+        output_tokens: int | None = None,
+        latency_ms: int | None = None,
+        payload: dict[str, Any] | None = None,
+    ) -> int: ...
+
+    def list_events(self, lesson_id: str) -> list[dict[str, Any]]: ...
+
+
+def _now() -> str:
+    return datetime.now(UTC).isoformat()
+
+
+class SqliteStore:
+    """File-backed store; schema mirrors db/migrations/0001_init.sql loosely."""
+
+    def __init__(self, path: str | Path):
+        self._path = str(path)
+        self._lock = threading.Lock()
+        with self._conn() as conn:
+            conn.executescript(
+                """
+                create table if not exists lessons (
+                  id text primary key,
+                  fingerprint text not null unique,
+                  topic text not null,
+                  audience text not null,
+                  language text not null,
+                  status text not null,
+                  script_version text,
+                  current_script text,
+                  created_at text not null
+                );
+                create table if not exists lesson_events (
+                  id text primary key,
+                  lesson_id text not null,
+                  seq integer not null,
+                  kind text not null,
+                  role text,
+                  prompt_version text,
+                  model text,
+                  input_tokens integer,
+                  output_tokens integer,
+                  latency_ms integer,
+                  payload text,
+                  created_at text not null,
+                  unique (lesson_id, seq)
+                );
+                """
+            )
+
+    def _conn(self) -> sqlite3.Connection:
+        conn = sqlite3.connect(self._path)
+        conn.row_factory = sqlite3.Row
+        return conn
+
+    @staticmethod
+    def _row_to_lesson(row: sqlite3.Row) -> Lesson:
+        return Lesson(
+            id=row["id"],
+            fingerprint=row["fingerprint"],
+            topic=row["topic"],
+            audience=row["audience"],
+            language=row["language"],
+            status=row["status"],
+            script_version=row["script_version"],
+            current_script=json.loads(row["current_script"]) if row["current_script"] else None,
+            created_at=row["created_at"],
+        )
+
+    def create_lesson(self, fingerprint: str, topic: str, audience: str, language: str) -> Lesson:
+        lesson = Lesson(
+            id=str(uuid.uuid4()),
+            fingerprint=fingerprint,
+            topic=topic,
+            audience=audience,
+            language=language,
+            status="queued",
+            script_version=None,
+            current_script=None,
+            created_at=_now(),
+        )
+        with self._lock, self._conn() as conn:
+            conn.execute(
+                "insert into lessons"
+                " (id, fingerprint, topic, audience, language, status, created_at)"
+                " values (?,?,?,?,?,?,?)",
+                (lesson.id, fingerprint, topic, audience, language,
+                 lesson.status, lesson.created_at),
+            )
+        return lesson
+
+    def get_lesson(self, lesson_id: str) -> Lesson | None:
+        with self._conn() as conn:
+            row = conn.execute("select * from lessons where id=?", (lesson_id,)).fetchone()
+        return self._row_to_lesson(row) if row else None
+
+    def get_lesson_by_fingerprint(self, fingerprint: str) -> Lesson | None:
+        with self._conn() as conn:
+            row = conn.execute(
+                "select * from lessons where fingerprint=?", (fingerprint,)
+            ).fetchone()
+        return self._row_to_lesson(row) if row else None
+
+    def set_status(self, lesson_id: str, status: str) -> None:
+        if status not in STATUSES:
+            raise ValueError(f"unknown status {status}")
+        with self._lock, self._conn() as conn:
+            conn.execute("update lessons set status=? where id=?", (status, lesson_id))
+
+    def save_script(self, lesson_id: str, script: dict[str, Any], version: str) -> None:
+        with self._lock, self._conn() as conn:
+            conn.execute(
+                "update lessons set current_script=?, script_version=? where id=?",
+                (json.dumps(script), version, lesson_id),
+            )
+
+    def save_event(
+        self,
+        lesson_id: str,
+        kind: str,
+        *,
+        role: str | None = None,
+        prompt_version: str | None = None,
+        model: str | None = None,
+        input_tokens: int | None = None,
+        output_tokens: int | None = None,
+        latency_ms: int | None = None,
+        payload: dict[str, Any] | None = None,
+    ) -> int:
+        if kind not in EVENT_KINDS:
+            raise ValueError(f"unknown event kind {kind}")
+        with self._lock, self._conn() as conn:
+            row = conn.execute(
+                "select coalesce(max(seq), 0) + 1 as seq from lesson_events where lesson_id=?",
+                (lesson_id,),
+            ).fetchone()
+            seq = int(row["seq"])
+            conn.execute(
+                "insert into lesson_events (id, lesson_id, seq, kind, role, prompt_version, model,"
+                " input_tokens, output_tokens, latency_ms, payload, created_at)"
+                " values (?,?,?,?,?,?,?,?,?,?,?,?)",
+                (
+                    str(uuid.uuid4()),
+                    lesson_id,
+                    seq,
+                    kind,
+                    role,
+                    prompt_version,
+                    model,
+                    input_tokens,
+                    output_tokens,
+                    latency_ms,
+                    json.dumps(payload) if payload is not None else None,
+                    _now(),
+                ),
+            )
+        return seq
+
+    def list_events(self, lesson_id: str) -> list[dict[str, Any]]:
+        with self._conn() as conn:
+            rows = conn.execute(
+                "select * from lesson_events where lesson_id=? order by seq", (lesson_id,)
+            ).fetchall()
+        out: list[dict[str, Any]] = []
+        for row in rows:
+            event = dict(row)
+            event["payload"] = json.loads(event["payload"]) if event["payload"] else None
+            out.append(event)
+        return out
+
+
+class SupabaseStore:
+    """Supabase-backed store (service role key; used once credentials exist)."""
+
+    def __init__(self, url: str, service_role_key: str):
+        from supabase import create_client
+
+        self._client = create_client(url, service_role_key)
+
+    @staticmethod
+    def _row_to_lesson(row: dict[str, Any]) -> Lesson:
+        return Lesson(
+            id=row["id"],
+            fingerprint=row["fingerprint"],
+            topic=row["topic"],
+            audience=row["audience"],
+            language=row["language"],
+            status=row["status"],
+            script_version=row.get("script_version"),
+            current_script=row.get("current_script"),
+            created_at=row.get("created_at", ""),
+        )
+
+    def create_lesson(self, fingerprint: str, topic: str, audience: str, language: str) -> Lesson:
+        result = (
+            self._client.table("lessons")
+            .insert(
+                {
+                    "fingerprint": fingerprint,
+                    "topic": topic,
+                    "audience": audience,
+                    "language": language,
+                    "status": "queued",
+                }
+            )
+            .execute()
+        )
+        return self._row_to_lesson(result.data[0])
+
+    def get_lesson(self, lesson_id: str) -> Lesson | None:
+        result = self._client.table("lessons").select("*").eq("id", lesson_id).execute()
+        return self._row_to_lesson(result.data[0]) if result.data else None
+
+    def get_lesson_by_fingerprint(self, fingerprint: str) -> Lesson | None:
+        result = (
+            self._client.table("lessons").select("*").eq("fingerprint", fingerprint).execute()
+        )
+        return self._row_to_lesson(result.data[0]) if result.data else None
+
+    def set_status(self, lesson_id: str, status: str) -> None:
+        if status not in STATUSES:
+            raise ValueError(f"unknown status {status}")
+        self._client.table("lessons").update({"status": status}).eq("id", lesson_id).execute()
+
+    def save_script(self, lesson_id: str, script: dict[str, Any], version: str) -> None:
+        self._client.table("lessons").update(
+            {"current_script": script, "script_version": version}
+        ).eq("id", lesson_id).execute()
+
+    def save_event(
+        self,
+        lesson_id: str,
+        kind: str,
+        *,
+        role: str | None = None,
+        prompt_version: str | None = None,
+        model: str | None = None,
+        input_tokens: int | None = None,
+        output_tokens: int | None = None,
+        latency_ms: int | None = None,
+        payload: dict[str, Any] | None = None,
+    ) -> int:
+        if kind not in EVENT_KINDS:
+            raise ValueError(f"unknown event kind {kind}")
+        existing = (
+            self._client.table("lesson_events")
+            .select("seq")
+            .eq("lesson_id", lesson_id)
+            .order("seq", desc=True)
+            .limit(1)
+            .execute()
+        )
+        seq = (existing.data[0]["seq"] + 1) if existing.data else 1
+        self._client.table("lesson_events").insert(
+            {
+                "lesson_id": lesson_id,
+                "seq": seq,
+                "kind": kind,
+                "role": role,
+                "prompt_version": prompt_version,
+                "model": model,
+                "input_tokens": input_tokens,
+                "output_tokens": output_tokens,
+                "latency_ms": latency_ms,
+                "payload": payload,
+            }
+        ).execute()
+        return seq
+
+    def list_events(self, lesson_id: str) -> list[dict[str, Any]]:
+        result = (
+            self._client.table("lesson_events")
+            .select("*")
+            .eq("lesson_id", lesson_id)
+            .order("seq")
+            .execute()
+        )
+        return list(result.data)

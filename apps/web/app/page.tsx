@@ -7,9 +7,20 @@ export default function Home() {
         animated lesson you can orbit, scrub, listen to, and finish with a
         three-question check.
       </p>
-      <p className="rounded-full border border-neutral-300 px-4 py-1 text-sm text-neutral-500 dark:border-neutral-700">
-        Phase 0 — scaffold. The request form arrives in Phase 3.
-      </p>
+      <div className="flex gap-3">
+        <a
+          href="/new"
+          className="rounded-full bg-sky-500 px-5 py-2 text-sm font-semibold text-white transition hover:bg-sky-400"
+        >
+          Generate a lesson
+        </a>
+        <a
+          href="/demo"
+          className="rounded-full border border-neutral-700 px-5 py-2 text-sm text-neutral-300 transition hover:border-neutral-500"
+        >
+          Built-in demo
+        </a>
+      </div>
     </main>
   );
 }

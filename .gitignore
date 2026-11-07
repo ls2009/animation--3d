@@ -30,3 +30,6 @@ keyframes-out/
 .DS_Store
 .idea/
 .vscode/
+
+# API runtime data (local sqlite fallback)
+apps/api/data/
