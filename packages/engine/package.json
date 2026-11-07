@@ -6,11 +6,18 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
-    "lint": "eslint src tests --max-warnings 0",
+    "lint": "eslint src tests scripts --max-warnings 0",
     "test": "vitest run",
-    "build": "tsc --noEmit"
+    "build": "tsc --noEmit",
+    "gen:catalog": "tsx scripts/gen-catalog.ts"
   },
   "dependencies": {
-    "@sinaa/dsl": "workspace:*"
+    "@sinaa/dsl": "workspace:*",
+    "three": "0.160.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "@types/three": "0.160.0",
+    "tsx": "^4.19.2"
   }
 }

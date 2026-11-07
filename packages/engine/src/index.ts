@@ -1,13 +1,42 @@
 /**
  * @sinaa/engine — deterministic scene-script engine.
  *
- * Phase 0 stub. Phase 1 ports the validator, computeState, prop library and
- * Three.js player from reference/prototype.html and exports:
- *   validateScript, computeState, createPlayer(canvas, labelsEl)
- *
- * Zero network calls; framework-free so it can be dropped into Course AI's
- * Next.js app unchanged.
+ * Framework-free (no React), zero network calls. The same script renders
+ * identically on every machine and offline. Course AI mounts createPlayer
+ * behind a lesson's Animate button; nothing here imports from any app.
  */
-import { DSL_VERSION } from "@sinaa/dsl";
+export { validateScript } from "./validator";
+export type { ValidateOptions, ValidateResult } from "./validator";
+export {
+  REPAIR_CODES,
+  NoScenesError,
+  BadInputError,
+} from "./repairs";
+export type { Repair, RepairCode, ValidatorStats } from "./repairs";
 
-export const ENGINE_DSL_VERSION = DSL_VERSION;
+export { computeState, easeInOut } from "./state";
+export type {
+  ActorState,
+  CameraState,
+  ControlValues,
+  FlowParticleState,
+  SceneState,
+} from "./state";
+
+export {
+  PROP_META,
+  PROP_NAMES,
+  PROP_ALIASES,
+  PROP_LIBRARY_VERSION,
+  PROP_BUILDERS,
+  buildProp,
+  resolvePropName,
+  registerGltfResolver,
+} from "./props/registry";
+export type { PropBuilder, GltfResolver } from "./props/registry";
+export type { PropMeta, PropDomain } from "./props/meta";
+
+export { createPlayer } from "./player";
+export type { Player, PlayerEvents, PlayerOptions } from "./player";
+
+export { BUILTIN_LESSONS } from "./lessons";
