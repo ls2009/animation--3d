@@ -83,6 +83,19 @@ class Store(Protocol):
 
     def list_events(self, lesson_id: str) -> list[dict[str, Any]]: ...
 
+    # -- golden runs ----------------------------------------------------------
+    def create_golden_run(self, git_sha: str, prompt_versions: dict[str, str]) -> str: ...
+
+    def finish_golden_run(self, run_id: str, summary: dict[str, Any]) -> None: ...
+
+    def save_golden_result(self, run_id: str, result: dict[str, Any]) -> None: ...
+
+    def list_golden_runs(self, limit: int = 5) -> list[dict[str, Any]]: ...
+
+    def list_golden_results(self, run_id: str) -> list[dict[str, Any]]: ...
+
+    def previous_golden_run(self, before_run_id: str) -> dict[str, Any] | None: ...
+
 
 def _now() -> str:
     return datetime.now(UTC).isoformat()
@@ -122,6 +135,27 @@ class SqliteStore:
                   payload text,
                   created_at text not null,
                   unique (lesson_id, seq)
+                );
+                create table if not exists golden_runs (
+                  id text primary key,
+                  git_sha text not null,
+                  prompt_versions text,
+                  started_at text not null,
+                  summary text,
+                  created_at text not null
+                );
+                create table if not exists golden_results (
+                  id text primary key,
+                  run_id text not null,
+                  topic_id text not null,
+                  lesson_id text,
+                  status text not null,
+                  repairs integer,
+                  inspector_pass_rate real,
+                  runtime_s real,
+                  cost_usd real,
+                  script text,
+                  created_at text not null
                 );
                 """
             )
@@ -247,6 +281,80 @@ class SqliteStore:
         return out
 
 
+    # -- golden runs ----------------------------------------------------------
+    def create_golden_run(self, git_sha: str, prompt_versions: dict[str, Any]) -> str:
+        run_id = str(uuid.uuid4())
+        with self._lock, self._conn() as conn:
+            conn.execute(
+                "insert into golden_runs (id, git_sha, prompt_versions, started_at, created_at)"
+                " values (?,?,?,?,?)",
+                (run_id, git_sha, json.dumps(prompt_versions), _now(), _now()),
+            )
+        return run_id
+
+    def finish_golden_run(self, run_id: str, summary: dict[str, Any]) -> None:
+        with self._lock, self._conn() as conn:
+            conn.execute(
+                "update golden_runs set summary=? where id=?",
+                (json.dumps(summary), run_id),
+            )
+
+    def save_golden_result(self, run_id: str, result: dict[str, Any]) -> None:
+        with self._lock, self._conn() as conn:
+            conn.execute(
+                "insert into golden_results (id, run_id, topic_id, lesson_id, status, repairs,"
+                " inspector_pass_rate, runtime_s, cost_usd, script, created_at)"
+                " values (?,?,?,?,?,?,?,?,?,?,?)",
+                (
+                    str(uuid.uuid4()),
+                    run_id,
+                    result["topic_id"],
+                    result.get("lesson_id"),
+                    result["status"],
+                    result.get("repairs"),
+                    result.get("inspector_pass_rate"),
+                    result.get("runtime_s"),
+                    result.get("cost_usd"),
+                    json.dumps(result.get("script")) if result.get("script") else None,
+                    _now(),
+                ),
+            )
+
+    def list_golden_runs(self, limit: int = 5) -> list[dict[str, Any]]:
+        with self._conn() as conn:
+            rows = conn.execute(
+                "select * from golden_runs order by started_at desc limit ?", (limit,)
+            ).fetchall()
+        out = []
+        for row in rows:
+            run = dict(row)
+            run["prompt_versions"] = (
+                json.loads(run["prompt_versions"]) if run["prompt_versions"] else None
+            )
+            run["summary"] = json.loads(run["summary"]) if run["summary"] else None
+            out.append(run)
+        return out
+
+    def list_golden_results(self, run_id: str) -> list[dict[str, Any]]:
+        with self._conn() as conn:
+            rows = conn.execute(
+                "select * from golden_results where run_id=? order by topic_id", (run_id,)
+            ).fetchall()
+        out = []
+        for row in rows:
+            result = dict(row)
+            result["script"] = json.loads(result["script"]) if result["script"] else None
+            out.append(result)
+        return out
+
+    def previous_golden_run(self, before_run_id: str) -> dict[str, Any] | None:
+        runs = self.list_golden_runs(limit=50)
+        for run in runs:
+            if run["id"] != before_run_id and run["summary"] is not None:
+                return run
+        return None
+
+
 class SupabaseStore:
     """Supabase-backed store (service role key; used once credentials exist)."""
 
@@ -354,3 +462,56 @@ class SupabaseStore:
             .execute()
         )
         return list(result.data)
+
+    # -- golden runs ----------------------------------------------------------
+    def create_golden_run(self, git_sha: str, prompt_versions: dict[str, Any]) -> str:
+        result = (
+            self._client.table("golden_runs")
+            .insert({"git_sha": git_sha, "prompt_versions": prompt_versions})
+            .execute()
+        )
+        return result.data[0]["id"]
+
+    def finish_golden_run(self, run_id: str, summary: dict[str, Any]) -> None:
+        self._client.table("golden_runs").update({"summary": summary}).eq("id", run_id).execute()
+
+    def save_golden_result(self, run_id: str, result: dict[str, Any]) -> None:
+        self._client.table("golden_results").insert(
+            {
+                "run_id": run_id,
+                "topic_id": result["topic_id"],
+                "lesson_id": result.get("lesson_id"),
+                "status": result["status"],
+                "repairs": result.get("repairs"),
+                "inspector_pass_rate": result.get("inspector_pass_rate"),
+                "runtime_s": result.get("runtime_s"),
+                "cost_usd": result.get("cost_usd"),
+                "script": result.get("script"),
+            }
+        ).execute()
+
+    def list_golden_runs(self, limit: int = 5) -> list[dict[str, Any]]:
+        result = (
+            self._client.table("golden_runs")
+            .select("*")
+            .order("started_at", desc=True)
+            .limit(limit)
+            .execute()
+        )
+        return list(result.data)
+
+    def list_golden_results(self, run_id: str) -> list[dict[str, Any]]:
+        result = (
+            self._client.table("golden_results")
+            .select("*")
+            .eq("run_id", run_id)
+            .order("topic_id")
+            .execute()
+        )
+        return list(result.data)
+
+    def previous_golden_run(self, before_run_id: str) -> dict[str, Any] | None:
+        for run in self.list_golden_runs(limit=50):
+            if run["id"] != before_run_id and run.get("summary") is not None:
+                return run
+        return None

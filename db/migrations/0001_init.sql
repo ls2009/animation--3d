@@ -111,6 +111,7 @@ create table if not exists public.golden_results (
   id                  uuid primary key default gen_random_uuid(),
   run_id              uuid not null references public.golden_runs (id) on delete restrict,
   topic_id            text not null,
+  lesson_id           uuid references public.lessons (id) on delete set null,
   status              text not null,
   repairs             integer,
   inspector_pass_rate real,

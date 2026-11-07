@@ -1,8 +1,18 @@
 /**
- * @sinaa/golden — golden-set topics and regression runner.
- *
- * Phase 0 stub. Phase 4 adds topics.json (36 topics = 12 subjects x 3
- * audiences, kept as data, not code) and the `pnpm golden:run` runner with
- * threshold comparison against the previous run on main.
+ * @sinaa/golden — the golden set. topics.json is DATA (the owner edits it);
+ * this module only loads and types it. The runner lives in
+ * apps/api/pipeline/golden.py and reads the same file.
  */
-export const GOLDEN_SET_PLANNED_TOPICS = 36;
+import raw from "../topics.json";
+
+export interface GoldenTopic {
+  id: string;
+  subject: string;
+  topic: string;
+  audience: string;
+  language: string;
+}
+
+export const GOLDEN_TOPICS: GoldenTopic[] = raw.topics;
+
+export const GOLDEN_SET_VERSION: number = raw.version;

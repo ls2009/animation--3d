@@ -127,6 +127,22 @@ def create_app(
             raise HTTPException(status_code=404, detail="lesson not found")
         return {"events": store.list_events(lesson_id)}
 
+    @app.get("/golden/runs")
+    def golden_runs(limit: int = 5) -> dict:
+        store: Store = app.state.store
+        return {"runs": store.list_golden_runs(limit=min(max(limit, 1), 20))}
+
+    @app.get("/golden/runs/{run_id}/results")
+    def golden_results(run_id: str) -> dict:
+        store: Store = app.state.store
+        results = store.list_golden_results(run_id)
+        if not results:
+            raise HTTPException(status_code=404, detail="run not found or empty")
+        # The dashboard lists topics; scripts are heavy, fetch via lessons.
+        for r in results:
+            r.pop("script", None)
+        return {"results": results}
+
     return app
 
 
