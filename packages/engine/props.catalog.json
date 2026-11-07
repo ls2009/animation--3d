@@ -1,0 +1,1235 @@
+{
+  "version": "1.0.0",
+  "count": 90,
+  "props": [
+    {
+      "name": "block",
+      "domain": "primitives",
+      "aliases": [
+        "cube",
+        "box"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "generic",
+        "fallback"
+      ]
+    },
+    {
+      "name": "sphere",
+      "domain": "primitives",
+      "aliases": [
+        "ball",
+        "orb"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "generic"
+      ]
+    },
+    {
+      "name": "cylinder",
+      "domain": "primitives",
+      "aliases": [
+        "barrel"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "generic"
+      ]
+    },
+    {
+      "name": "cone",
+      "domain": "primitives",
+      "aliases": [],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "generic"
+      ]
+    },
+    {
+      "name": "ring",
+      "domain": "primitives",
+      "aliases": [
+        "torus",
+        "donut"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "generic"
+      ]
+    },
+    {
+      "name": "disc",
+      "domain": "primitives",
+      "aliases": [
+        "plate",
+        "circle"
+      ],
+      "height": 0.3,
+      "footprint": 2,
+      "transparent": false,
+      "tags": [
+        "generic"
+      ]
+    },
+    {
+      "name": "slab",
+      "domain": "primitives",
+      "aliases": [
+        "platform",
+        "panel"
+      ],
+      "height": 0.4,
+      "footprint": 3,
+      "transparent": false,
+      "tags": [
+        "generic"
+      ]
+    },
+    {
+      "name": "rod",
+      "domain": "primitives",
+      "aliases": [
+        "stick",
+        "pole"
+      ],
+      "height": 2,
+      "footprint": 0.4,
+      "transparent": false,
+      "tags": [
+        "generic"
+      ]
+    },
+    {
+      "name": "tube",
+      "domain": "primitives",
+      "aliases": [
+        "pipe"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": true,
+      "tags": [
+        "generic"
+      ]
+    },
+    {
+      "name": "wedge",
+      "domain": "primitives",
+      "aliases": [
+        "ramp"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "generic"
+      ]
+    },
+    {
+      "name": "star",
+      "domain": "primitives",
+      "aliases": [],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "generic",
+        "marker"
+      ]
+    },
+    {
+      "name": "arrow",
+      "domain": "primitives",
+      "aliases": [
+        "pointer"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "generic",
+        "marker"
+      ]
+    },
+    {
+      "name": "tree",
+      "domain": "nature",
+      "aliases": [],
+      "height": 3,
+      "footprint": 2,
+      "transparent": false,
+      "tags": [
+        "plant"
+      ]
+    },
+    {
+      "name": "leaf",
+      "domain": "nature",
+      "aliases": [],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "plant",
+        "photosynthesis"
+      ]
+    },
+    {
+      "name": "flower",
+      "domain": "nature",
+      "aliases": [
+        "blossom"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "plant"
+      ]
+    },
+    {
+      "name": "sun",
+      "domain": "nature",
+      "aliases": [
+        "sunlight"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "sky",
+        "light",
+        "photosynthesis"
+      ]
+    },
+    {
+      "name": "cloud",
+      "domain": "nature",
+      "aliases": [],
+      "height": 2,
+      "footprint": 3,
+      "transparent": false,
+      "tags": [
+        "sky",
+        "weather"
+      ]
+    },
+    {
+      "name": "raindrop",
+      "domain": "nature",
+      "aliases": [
+        "water-drop",
+        "droplet"
+      ],
+      "height": 1,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "water",
+        "weather"
+      ]
+    },
+    {
+      "name": "mountain",
+      "domain": "nature",
+      "aliases": [
+        "hill"
+      ],
+      "height": 3,
+      "footprint": 4,
+      "transparent": false,
+      "tags": [
+        "terrain"
+      ]
+    },
+    {
+      "name": "river",
+      "domain": "nature",
+      "aliases": [
+        "stream"
+      ],
+      "height": 0.2,
+      "footprint": 4,
+      "transparent": false,
+      "tags": [
+        "water",
+        "terrain"
+      ]
+    },
+    {
+      "name": "seed",
+      "domain": "nature",
+      "aliases": [],
+      "height": 0.8,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "plant"
+      ]
+    },
+    {
+      "name": "root",
+      "domain": "nature",
+      "aliases": [
+        "roots"
+      ],
+      "height": 1.2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "plant"
+      ]
+    },
+    {
+      "name": "grass-patch",
+      "domain": "nature",
+      "aliases": [
+        "grass"
+      ],
+      "height": 0.6,
+      "footprint": 2.5,
+      "transparent": false,
+      "tags": [
+        "plant",
+        "terrain"
+      ]
+    },
+    {
+      "name": "bee",
+      "domain": "nature",
+      "aliases": [
+        "insect"
+      ],
+      "height": 1,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "animal"
+      ]
+    },
+    {
+      "name": "apple",
+      "domain": "nature",
+      "aliases": [
+        "fruit"
+      ],
+      "height": 1.2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "plant",
+        "food"
+      ]
+    },
+    {
+      "name": "atom",
+      "domain": "science",
+      "aliases": [],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "chemistry",
+        "physics"
+      ]
+    },
+    {
+      "name": "molecule",
+      "domain": "science",
+      "aliases": [
+        "compound"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "chemistry"
+      ]
+    },
+    {
+      "name": "electron",
+      "domain": "science",
+      "aliases": [
+        "charge"
+      ],
+      "height": 0.8,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "physics",
+        "electricity"
+      ]
+    },
+    {
+      "name": "beaker",
+      "domain": "science",
+      "aliases": [],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": true,
+      "tags": [
+        "chemistry",
+        "glassware"
+      ]
+    },
+    {
+      "name": "flask",
+      "domain": "science",
+      "aliases": [
+        "erlenmeyer"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": true,
+      "tags": [
+        "chemistry",
+        "glassware"
+      ]
+    },
+    {
+      "name": "test-tube",
+      "domain": "science",
+      "aliases": [
+        "vial"
+      ],
+      "height": 2,
+      "footprint": 0.6,
+      "transparent": true,
+      "tags": [
+        "chemistry",
+        "glassware"
+      ]
+    },
+    {
+      "name": "magnet",
+      "domain": "science",
+      "aliases": [
+        "horseshoe-magnet"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "physics",
+        "magnetism"
+      ]
+    },
+    {
+      "name": "prism",
+      "domain": "science",
+      "aliases": [],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": true,
+      "tags": [
+        "physics",
+        "optics"
+      ]
+    },
+    {
+      "name": "dna-helix",
+      "domain": "science",
+      "aliases": [
+        "dna"
+      ],
+      "height": 3,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "biology",
+        "genetics"
+      ]
+    },
+    {
+      "name": "microscope",
+      "domain": "science",
+      "aliases": [],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "biology",
+        "instrument"
+      ]
+    },
+    {
+      "name": "thermometer",
+      "domain": "science",
+      "aliases": [],
+      "height": 2,
+      "footprint": 0.5,
+      "transparent": false,
+      "tags": [
+        "instrument",
+        "temperature"
+      ]
+    },
+    {
+      "name": "battery",
+      "domain": "science",
+      "aliases": [
+        "cell-battery",
+        "lithium-battery"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "electricity",
+        "energy"
+      ]
+    },
+    {
+      "name": "lightbulb",
+      "domain": "science",
+      "aliases": [
+        "bulb",
+        "lamp"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "electricity",
+        "light"
+      ]
+    },
+    {
+      "name": "piston",
+      "domain": "machines",
+      "aliases": [],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "engine",
+        "automotive"
+      ]
+    },
+    {
+      "name": "engine-cylinder",
+      "domain": "machines",
+      "aliases": [
+        "engine",
+        "cylinder-engine"
+      ],
+      "height": 3,
+      "footprint": 1.5,
+      "transparent": true,
+      "tags": [
+        "engine",
+        "automotive"
+      ]
+    },
+    {
+      "name": "crankshaft",
+      "domain": "machines",
+      "aliases": [
+        "crank"
+      ],
+      "height": 1.5,
+      "footprint": 2.5,
+      "transparent": false,
+      "tags": [
+        "engine",
+        "automotive"
+      ]
+    },
+    {
+      "name": "valve",
+      "domain": "machines",
+      "aliases": [
+        "intake-valve",
+        "exhaust-valve"
+      ],
+      "height": 1.2,
+      "footprint": 0.8,
+      "transparent": false,
+      "tags": [
+        "engine",
+        "automotive"
+      ]
+    },
+    {
+      "name": "spark-plug",
+      "domain": "machines",
+      "aliases": [
+        "sparkplug"
+      ],
+      "height": 1.2,
+      "footprint": 0.5,
+      "transparent": false,
+      "tags": [
+        "engine",
+        "automotive"
+      ]
+    },
+    {
+      "name": "gear",
+      "domain": "machines",
+      "aliases": [
+        "cog",
+        "cogwheel"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "mechanism"
+      ]
+    },
+    {
+      "name": "turbine",
+      "domain": "machines",
+      "aliases": [
+        "turbo",
+        "turbocharger",
+        "impeller"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "engine",
+        "energy"
+      ]
+    },
+    {
+      "name": "fan",
+      "domain": "machines",
+      "aliases": [
+        "propeller"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "mechanism",
+        "cooling"
+      ]
+    },
+    {
+      "name": "spring",
+      "domain": "machines",
+      "aliases": [
+        "coil"
+      ],
+      "height": 2,
+      "footprint": 0.8,
+      "transparent": false,
+      "tags": [
+        "mechanism"
+      ]
+    },
+    {
+      "name": "wheel",
+      "domain": "machines",
+      "aliases": [
+        "tire",
+        "tyre"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "automotive",
+        "mechanism"
+      ]
+    },
+    {
+      "name": "lever",
+      "domain": "machines",
+      "aliases": [
+        "seesaw"
+      ],
+      "height": 1.2,
+      "footprint": 3,
+      "transparent": false,
+      "tags": [
+        "mechanism"
+      ]
+    },
+    {
+      "name": "pulley",
+      "domain": "machines",
+      "aliases": [],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "mechanism"
+      ]
+    },
+    {
+      "name": "pump",
+      "domain": "machines",
+      "aliases": [
+        "compressor"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "mechanism",
+        "fluid"
+      ]
+    },
+    {
+      "name": "coin",
+      "domain": "business",
+      "aliases": [
+        "money"
+      ],
+      "height": 0.4,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "finance"
+      ]
+    },
+    {
+      "name": "banknote",
+      "domain": "business",
+      "aliases": [
+        "bill",
+        "cash"
+      ],
+      "height": 0.1,
+      "footprint": 2,
+      "transparent": false,
+      "tags": [
+        "finance"
+      ]
+    },
+    {
+      "name": "bar-chart",
+      "domain": "business",
+      "aliases": [
+        "chart",
+        "histogram"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "data",
+        "finance"
+      ]
+    },
+    {
+      "name": "pie-chart",
+      "domain": "business",
+      "aliases": [],
+      "height": 0.5,
+      "footprint": 2,
+      "transparent": false,
+      "tags": [
+        "data",
+        "finance"
+      ]
+    },
+    {
+      "name": "graph-line",
+      "domain": "business",
+      "aliases": [
+        "line-chart",
+        "trend"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "data",
+        "finance"
+      ]
+    },
+    {
+      "name": "briefcase",
+      "domain": "business",
+      "aliases": [
+        "suitcase"
+      ],
+      "height": 1.4,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "office"
+      ]
+    },
+    {
+      "name": "building",
+      "domain": "business",
+      "aliases": [
+        "office-tower",
+        "skyscraper"
+      ],
+      "height": 4,
+      "footprint": 2,
+      "transparent": false,
+      "tags": [
+        "city"
+      ]
+    },
+    {
+      "name": "factory",
+      "domain": "business",
+      "aliases": [
+        "plant-factory"
+      ],
+      "height": 2.5,
+      "footprint": 3.5,
+      "transparent": false,
+      "tags": [
+        "industry"
+      ]
+    },
+    {
+      "name": "shopping-cart",
+      "domain": "business",
+      "aliases": [
+        "cart",
+        "trolley"
+      ],
+      "height": 1.4,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "commerce"
+      ]
+    },
+    {
+      "name": "scale-balance",
+      "domain": "business",
+      "aliases": [
+        "scales",
+        "balance"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "justice",
+        "comparison"
+      ]
+    },
+    {
+      "name": "vault",
+      "domain": "business",
+      "aliases": [
+        "safe"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "finance"
+      ]
+    },
+    {
+      "name": "package",
+      "domain": "business",
+      "aliases": [
+        "parcel",
+        "shipment"
+      ],
+      "height": 1.2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "commerce",
+        "logistics"
+      ]
+    },
+    {
+      "name": "person",
+      "domain": "business",
+      "aliases": [
+        "human",
+        "figure",
+        "customer",
+        "buyer",
+        "seller"
+      ],
+      "height": 2.4,
+      "footprint": 1,
+      "transparent": false,
+      "tags": [
+        "people"
+      ]
+    },
+    {
+      "name": "laptop",
+      "domain": "tech",
+      "aliases": [
+        "computer",
+        "client"
+      ],
+      "height": 1.2,
+      "footprint": 2,
+      "transparent": false,
+      "tags": [
+        "computing",
+        "networking"
+      ]
+    },
+    {
+      "name": "server",
+      "domain": "tech",
+      "aliases": [
+        "server-rack",
+        "host"
+      ],
+      "height": 2.6,
+      "footprint": 1.4,
+      "transparent": false,
+      "tags": [
+        "computing",
+        "networking"
+      ]
+    },
+    {
+      "name": "router",
+      "domain": "tech",
+      "aliases": [
+        "switch-network",
+        "gateway"
+      ],
+      "height": 0.8,
+      "footprint": 2,
+      "transparent": false,
+      "tags": [
+        "networking"
+      ]
+    },
+    {
+      "name": "packet",
+      "domain": "tech",
+      "aliases": [
+        "datagram",
+        "message"
+      ],
+      "height": 0.8,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "networking",
+        "data"
+      ]
+    },
+    {
+      "name": "database",
+      "domain": "tech",
+      "aliases": [
+        "db",
+        "datastore"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "computing",
+        "data"
+      ]
+    },
+    {
+      "name": "antenna",
+      "domain": "tech",
+      "aliases": [
+        "mast"
+      ],
+      "height": 3,
+      "footprint": 1,
+      "transparent": false,
+      "tags": [
+        "networking",
+        "radio"
+      ]
+    },
+    {
+      "name": "satellite",
+      "domain": "tech",
+      "aliases": [],
+      "height": 2,
+      "footprint": 2.5,
+      "transparent": false,
+      "tags": [
+        "space",
+        "networking"
+      ]
+    },
+    {
+      "name": "chip",
+      "domain": "tech",
+      "aliases": [
+        "cpu",
+        "processor",
+        "microchip"
+      ],
+      "height": 0.4,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "computing",
+        "hardware"
+      ]
+    },
+    {
+      "name": "smartphone",
+      "domain": "tech",
+      "aliases": [
+        "phone",
+        "mobile"
+      ],
+      "height": 1.8,
+      "footprint": 1,
+      "transparent": false,
+      "tags": [
+        "computing"
+      ]
+    },
+    {
+      "name": "cable",
+      "domain": "tech",
+      "aliases": [
+        "wire",
+        "ethernet"
+      ],
+      "height": 0.4,
+      "footprint": 3,
+      "transparent": false,
+      "tags": [
+        "networking",
+        "hardware"
+      ]
+    },
+    {
+      "name": "cloud-server",
+      "domain": "tech",
+      "aliases": [
+        "cloud-computing"
+      ],
+      "height": 2,
+      "footprint": 3,
+      "transparent": false,
+      "tags": [
+        "computing",
+        "networking"
+      ]
+    },
+    {
+      "name": "shield",
+      "domain": "tech",
+      "aliases": [
+        "firewall"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "security"
+      ]
+    },
+    {
+      "name": "globe",
+      "domain": "tech",
+      "aliases": [
+        "earth",
+        "world",
+        "dns-globe"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "networking",
+        "geography"
+      ]
+    },
+    {
+      "name": "heart",
+      "domain": "body",
+      "aliases": [],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "organ",
+        "circulation"
+      ]
+    },
+    {
+      "name": "lungs",
+      "domain": "body",
+      "aliases": [
+        "lung"
+      ],
+      "height": 2,
+      "footprint": 2.2,
+      "transparent": false,
+      "tags": [
+        "organ",
+        "respiration"
+      ]
+    },
+    {
+      "name": "red-blood-cell",
+      "domain": "body",
+      "aliases": [
+        "blood-cell",
+        "erythrocyte"
+      ],
+      "height": 0.8,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "cell",
+        "circulation"
+      ]
+    },
+    {
+      "name": "white-blood-cell",
+      "domain": "body",
+      "aliases": [
+        "leukocyte",
+        "immune-cell"
+      ],
+      "height": 1,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "cell",
+        "immunity"
+      ]
+    },
+    {
+      "name": "virus",
+      "domain": "body",
+      "aliases": [
+        "germ",
+        "pathogen"
+      ],
+      "height": 1,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "microbe",
+        "immunity"
+      ]
+    },
+    {
+      "name": "antibody",
+      "domain": "body",
+      "aliases": [],
+      "height": 1,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "immunity"
+      ]
+    },
+    {
+      "name": "cell",
+      "domain": "body",
+      "aliases": [
+        "cell-body"
+      ],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": true,
+      "tags": [
+        "cell",
+        "biology"
+      ]
+    },
+    {
+      "name": "neuron",
+      "domain": "body",
+      "aliases": [
+        "nerve-cell"
+      ],
+      "height": 2,
+      "footprint": 2.5,
+      "transparent": false,
+      "tags": [
+        "cell",
+        "nervous-system"
+      ]
+    },
+    {
+      "name": "bone",
+      "domain": "body",
+      "aliases": [],
+      "height": 2,
+      "footprint": 0.8,
+      "transparent": false,
+      "tags": [
+        "skeleton"
+      ]
+    },
+    {
+      "name": "stomach",
+      "domain": "body",
+      "aliases": [],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "organ",
+        "digestion"
+      ]
+    },
+    {
+      "name": "brain",
+      "domain": "body",
+      "aliases": [],
+      "height": 2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "organ",
+        "nervous-system"
+      ]
+    },
+    {
+      "name": "vein",
+      "domain": "body",
+      "aliases": [
+        "artery",
+        "blood-vessel"
+      ],
+      "height": 0.8,
+      "footprint": 3,
+      "transparent": true,
+      "tags": [
+        "circulation"
+      ]
+    },
+    {
+      "name": "syringe",
+      "domain": "body",
+      "aliases": [
+        "vaccine",
+        "injection"
+      ],
+      "height": 2,
+      "footprint": 0.5,
+      "transparent": false,
+      "tags": [
+        "medicine",
+        "immunity"
+      ]
+    }
+  ]
+}

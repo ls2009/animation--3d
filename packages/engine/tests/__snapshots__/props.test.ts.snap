@@ -1,0 +1,845 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`structural snapshots > antenna structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.12|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|1.45|0.00|tinted|1.00",
+  "SphereGeometry|0.00|2.75|0.00|tinted|1.00",
+  "TorusGeometry|0.00|2.75|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > antibody structure snapshot 1`] = `
+[
+  "CylinderGeometry|-0.21|0.98|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|0.40|0.00|tinted|1.00",
+  "CylinderGeometry|0.21|0.98|0.00|tinted|1.00",
+  "SphereGeometry|-0.42|1.19|0.00|tinted|1.00",
+  "SphereGeometry|0.42|1.19|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > apple structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|1.05|0.00|fixed|1.00",
+  "SphereGeometry|0.00|0.50|0.00|tinted|1.00",
+  "SphereGeometry|0.12|1.15|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > arrow structure snapshot 1`] = `
+[
+  "ConeGeometry|0.00|1.65|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|0.65|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > atom structure snapshot 1`] = `
+[
+  "SphereGeometry|0.00|1.00|0.00|tinted|1.00",
+  "SphereGeometry|0.85|1.00|0.00|fixed|1.00",
+  "TorusGeometry|0.00|1.00|0.00|fixed|1.00",
+  "TorusGeometry|0.00|1.00|0.00|fixed|1.00",
+  "TorusGeometry|0.00|1.00|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > banknote structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|0.03|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|0.07|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > bar-chart structure snapshot 1`] = `
+[
+  "BoxGeometry|-0.70|0.45|0.00|tinted|1.00",
+  "BoxGeometry|0.00|0.05|0.00|fixed|1.00",
+  "BoxGeometry|0.00|0.70|0.00|tinted|1.00",
+  "BoxGeometry|0.70|1.00|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > battery structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.20|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|0.90|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|1.90|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > beaker structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.45|0.00|tinted|0.80",
+  "CylinderGeometry|0.00|0.80|0.00|fixed|0.30",
+  "TorusGeometry|0.00|1.60|0.00|fixed|0.50",
+]
+`;
+
+exports[`structural snapshots > bee structure snapshot 1`] = `
+[
+  "SphereGeometry|0.00|0.75|0.00|tinted|1.00",
+  "SphereGeometry|0.10|1.05|-0.22|fixed|0.60",
+  "SphereGeometry|0.10|1.05|0.22|fixed|0.60",
+  "SphereGeometry|0.45|0.75|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > block structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|1.00|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > bone structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|1.00|0.00|tinted|1.00",
+  "SphereGeometry|-0.05|0.30|0.00|tinted|1.00",
+  "SphereGeometry|-0.30|0.42|0.00|tinted|1.00",
+  "SphereGeometry|0.06|1.72|0.00|tinted|1.00",
+  "SphereGeometry|0.30|1.60|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > brain structure snapshot 1`] = `
+[
+  "SphereGeometry|0.00|1.00|0.00|tinted|1.00",
+  "TorusGeometry|-0.30|1.10|-0.50|tinted|1.00",
+  "TorusGeometry|-0.30|1.25|0.38|tinted|1.00",
+  "TorusGeometry|-0.30|1.40|-0.06|tinted|1.00",
+  "TorusGeometry|0.30|1.10|0.16|tinted|1.00",
+  "TorusGeometry|0.30|1.25|-0.28|tinted|1.00",
+  "TorusGeometry|0.30|1.40|0.60|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > briefcase structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|0.55|0.00|tinted|1.00",
+  "BoxGeometry|0.00|0.85|0.00|fixed|1.00",
+  "TorusGeometry|0.00|1.25|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > building structure snapshot 1`] = `
+[
+  "BoxGeometry|-0.50|0.60|0.81|fixed|1.00",
+  "BoxGeometry|-0.50|1.28|0.81|fixed|1.00",
+  "BoxGeometry|-0.50|1.96|0.81|fixed|1.00",
+  "BoxGeometry|-0.50|2.64|0.81|fixed|1.00",
+  "BoxGeometry|-0.50|3.32|0.81|fixed|1.00",
+  "BoxGeometry|0.00|0.60|0.81|fixed|1.00",
+  "BoxGeometry|0.00|1.28|0.81|fixed|1.00",
+  "BoxGeometry|0.00|1.90|0.00|tinted|1.00",
+  "BoxGeometry|0.00|1.96|0.81|fixed|1.00",
+  "BoxGeometry|0.00|2.64|0.81|fixed|1.00",
+  "BoxGeometry|0.00|3.32|0.81|fixed|1.00",
+  "BoxGeometry|0.50|0.60|0.81|fixed|1.00",
+  "BoxGeometry|0.50|1.28|0.81|fixed|1.00",
+  "BoxGeometry|0.50|1.96|0.81|fixed|1.00",
+  "BoxGeometry|0.50|2.64|0.81|fixed|1.00",
+  "BoxGeometry|0.50|3.32|0.81|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > cable structure snapshot 1`] = `
+[
+  "BoxGeometry|-1.45|0.25|0.00|fixed|1.00",
+  "BoxGeometry|1.45|0.25|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|0.25|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > cell structure snapshot 1`] = `
+[
+  "SphereGeometry|-0.50|0.75|0.30|fixed|1.00",
+  "SphereGeometry|0.00|1.00|0.00|tinted|0.40",
+  "SphereGeometry|0.00|1.00|0.00|tinted|1.00",
+  "SphereGeometry|0.55|1.30|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > chip structure snapshot 1`] = `
+[
+  "BoxGeometry|-0.40|0.12|0.00|fixed|1.00",
+  "BoxGeometry|0.00|0.12|-0.40|fixed|1.00",
+  "BoxGeometry|0.00|0.12|0.00|fixed|1.00",
+  "BoxGeometry|0.00|0.12|0.00|fixed|1.00",
+  "BoxGeometry|0.00|0.12|0.40|fixed|1.00",
+  "BoxGeometry|0.00|0.20|0.00|tinted|1.00",
+  "BoxGeometry|0.00|0.32|0.00|fixed|1.00",
+  "BoxGeometry|0.40|0.12|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > cloud structure snapshot 1`] = `
+[
+  "SphereGeometry|-0.70|1.10|0.00|tinted|1.00",
+  "SphereGeometry|0.00|1.30|0.00|tinted|1.00",
+  "SphereGeometry|0.75|1.10|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > cloud-server structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|0.55|0.00|fixed|1.00",
+  "SphereGeometry|-0.60|1.30|0.00|tinted|1.00",
+  "SphereGeometry|0.00|1.50|0.00|tinted|1.00",
+  "SphereGeometry|0.25|0.60|0.26|fixed|1.00",
+  "SphereGeometry|0.70|1.30|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > coin structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.15|0.00|tinted|1.00",
+  "TorusGeometry|0.00|0.31|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > cone structure snapshot 1`] = `
+[
+  "ConeGeometry|0.00|1.00|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > crankshaft structure snapshot 1`] = `
+[
+  "BoxGeometry|-0.50|0.75|0.00|tinted|1.00",
+  "BoxGeometry|0.50|0.75|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|0.75|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|1.15|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > cylinder structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|1.00|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > database structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.30|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|0.95|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|1.60|0.00|tinted|1.00",
+  "TorusGeometry|0.00|1.90|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > disc structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.15|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > dna-helix structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.15|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|0.46|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|0.78|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|1.09|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|1.40|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|1.71|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|2.02|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|2.34|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|2.65|0.00|fixed|1.00",
+  "SphereGeometry|-0.00|0.46|-0.50|tinted|1.00",
+  "SphereGeometry|-0.00|1.09|-0.50|tinted|1.00",
+  "SphereGeometry|-0.00|1.71|-0.50|tinted|1.00",
+  "SphereGeometry|-0.00|2.34|-0.50|tinted|1.00",
+  "SphereGeometry|-0.35|0.31|-0.35|tinted|1.00",
+  "SphereGeometry|-0.35|0.62|0.35|tinted|1.00",
+  "SphereGeometry|-0.35|0.93|-0.35|tinted|1.00",
+  "SphereGeometry|-0.35|1.24|0.35|tinted|1.00",
+  "SphereGeometry|-0.35|1.56|-0.35|tinted|1.00",
+  "SphereGeometry|-0.35|1.87|0.35|tinted|1.00",
+  "SphereGeometry|-0.35|2.18|-0.35|tinted|1.00",
+  "SphereGeometry|-0.35|2.49|0.35|tinted|1.00",
+  "SphereGeometry|-0.50|0.15|0.00|tinted|1.00",
+  "SphereGeometry|-0.50|0.78|0.00|tinted|1.00",
+  "SphereGeometry|-0.50|1.40|0.00|tinted|1.00",
+  "SphereGeometry|-0.50|2.02|0.00|tinted|1.00",
+  "SphereGeometry|-0.50|2.65|0.00|tinted|1.00",
+  "SphereGeometry|0.00|0.46|0.50|tinted|1.00",
+  "SphereGeometry|0.00|1.09|0.50|tinted|1.00",
+  "SphereGeometry|0.00|1.71|0.50|tinted|1.00",
+  "SphereGeometry|0.00|2.34|0.50|tinted|1.00",
+  "SphereGeometry|0.35|0.31|0.35|tinted|1.00",
+  "SphereGeometry|0.35|0.62|-0.35|tinted|1.00",
+  "SphereGeometry|0.35|0.93|0.35|tinted|1.00",
+  "SphereGeometry|0.35|1.24|-0.35|tinted|1.00",
+  "SphereGeometry|0.35|1.56|0.35|tinted|1.00",
+  "SphereGeometry|0.35|1.87|-0.35|tinted|1.00",
+  "SphereGeometry|0.35|2.18|0.35|tinted|1.00",
+  "SphereGeometry|0.35|2.49|-0.35|tinted|1.00",
+  "SphereGeometry|0.50|0.15|0.00|tinted|1.00",
+  "SphereGeometry|0.50|0.78|-0.00|tinted|1.00",
+  "SphereGeometry|0.50|1.40|-0.00|tinted|1.00",
+  "SphereGeometry|0.50|2.02|-0.00|tinted|1.00",
+  "SphereGeometry|0.50|2.65|-0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > electron structure snapshot 1`] = `
+[
+  "SphereGeometry|0.00|0.40|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > engine-cylinder structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.10|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|1.30|0.00|tinted|0.35",
+  "CylinderGeometry|0.00|2.85|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > factory structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|0.70|0.00|tinted|1.00",
+  "ConeGeometry|0.90|1.75|0.00|fixed|1.00",
+  "CylinderGeometry|-0.30|1.85|0.00|fixed|1.00",
+  "CylinderGeometry|-0.90|2.00|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > fan structure snapshot 1`] = `
+[
+  "BoxGeometry|-0.00|0.68|0.00|tinted|1.00",
+  "BoxGeometry|-0.42|1.10|0.00|tinted|1.00",
+  "BoxGeometry|0.00|1.52|0.00|tinted|1.00",
+  "BoxGeometry|0.42|1.10|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|0.20|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|0.70|0.00|fixed|1.00",
+  "SphereGeometry|0.00|1.10|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > flask structure snapshot 1`] = `
+[
+  "ConeGeometry|0.00|0.45|0.00|tinted|0.80",
+  "ConeGeometry|0.00|0.65|0.00|fixed|0.30",
+  "CylinderGeometry|0.00|1.65|0.00|fixed|0.30",
+]
+`;
+
+exports[`structural snapshots > flower structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.60|0.00|fixed|1.00",
+  "SphereGeometry|-0.17|1.45|0.30|tinted|1.00",
+  "SphereGeometry|-0.18|1.45|-0.30|tinted|1.00",
+  "SphereGeometry|-0.35|1.45|0.00|tinted|1.00",
+  "SphereGeometry|0.00|1.45|0.00|fixed|1.00",
+  "SphereGeometry|0.18|1.45|-0.30|tinted|1.00",
+  "SphereGeometry|0.18|1.45|0.30|tinted|1.00",
+  "SphereGeometry|0.35|1.45|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > gear structure snapshot 1`] = `
+[
+  "BoxGeometry|-0.00|1.00|-0.90|tinted|1.00",
+  "BoxGeometry|-0.64|1.00|-0.64|tinted|1.00",
+  "BoxGeometry|-0.64|1.00|0.64|tinted|1.00",
+  "BoxGeometry|-0.90|1.00|0.00|tinted|1.00",
+  "BoxGeometry|0.00|1.00|0.90|tinted|1.00",
+  "BoxGeometry|0.64|1.00|-0.64|tinted|1.00",
+  "BoxGeometry|0.64|1.00|0.64|tinted|1.00",
+  "BoxGeometry|0.90|1.00|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|1.00|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|1.00|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > globe structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.07|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|0.30|0.00|fixed|1.00",
+  "SphereGeometry|0.00|1.25|0.00|fixed|1.00",
+  "SphereGeometry|0.00|1.25|0.00|tinted|0.90",
+  "TorusGeometry|0.00|1.25|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > graph-line structure snapshot 1`] = `
+[
+  "BoxGeometry|-0.60|0.57|0.00|tinted|1.00",
+  "BoxGeometry|-1.10|0.90|0.00|fixed|1.00",
+  "BoxGeometry|0.00|0.06|0.00|fixed|1.00",
+  "BoxGeometry|0.00|0.70|0.00|tinted|1.00",
+  "BoxGeometry|0.63|1.05|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > grass-patch structure snapshot 1`] = `
+[
+  "ConeGeometry|-0.35|0.37|-0.61|tinted|1.00",
+  "ConeGeometry|-0.35|0.37|0.61|tinted|1.00",
+  "ConeGeometry|-0.66|0.37|-0.24|tinted|1.00",
+  "ConeGeometry|-0.66|0.37|0.24|tinted|1.00",
+  "ConeGeometry|0.12|0.37|-0.69|tinted|1.00",
+  "ConeGeometry|0.12|0.37|0.69|tinted|1.00",
+  "ConeGeometry|0.54|0.37|-0.45|tinted|1.00",
+  "ConeGeometry|0.54|0.37|0.45|tinted|1.00",
+  "ConeGeometry|0.70|0.37|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|0.06|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > heart structure snapshot 1`] = `
+[
+  "ConeGeometry|0.00|0.55|0.00|tinted|1.00",
+  "SphereGeometry|-0.30|1.35|0.00|tinted|1.00",
+  "SphereGeometry|0.30|1.35|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > laptop structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|0.05|0.00|tinted|1.00",
+  "BoxGeometry|0.00|0.65|-0.60|tinted|1.00",
+  "BoxGeometry|0.00|0.66|-0.55|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > leaf structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.40|0.00|fixed|1.00",
+  "SphereGeometry|0.00|1.30|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > lever structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|0.68|0.00|tinted|1.00",
+  "ConeGeometry|0.00|0.30|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > lightbulb structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.25|0.00|fixed|1.00",
+  "SphereGeometry|0.00|1.05|0.00|tinted|0.65",
+]
+`;
+
+exports[`structural snapshots > lungs structure snapshot 1`] = `
+[
+  "CylinderGeometry|-0.25|1.25|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|1.65|0.00|fixed|1.00",
+  "CylinderGeometry|0.25|1.25|0.00|fixed|1.00",
+  "SphereGeometry|-0.55|0.85|0.00|tinted|1.00",
+  "SphereGeometry|0.55|0.85|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > magnet structure snapshot 1`] = `
+[
+  "BoxGeometry|-0.55|0.35|0.00|fixed|1.00",
+  "BoxGeometry|-0.55|0.90|0.00|tinted|1.00",
+  "BoxGeometry|0.55|0.35|0.00|fixed|1.00",
+  "BoxGeometry|0.55|0.90|0.00|tinted|1.00",
+  "TorusGeometry|0.00|1.60|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > microscope structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|0.80|0.00|fixed|1.00",
+  "CylinderGeometry|-0.25|0.90|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|0.13|0.00|fixed|1.00",
+  "CylinderGeometry|0.18|1.55|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > molecule structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.68|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|1.08|0.00|fixed|1.00",
+  "SphereGeometry|-0.50|0.90|0.00|tinted|1.00",
+  "SphereGeometry|0.45|0.45|0.00|fixed|1.00",
+  "SphereGeometry|0.55|1.25|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > mountain structure snapshot 1`] = `
+[
+  "ConeGeometry|0.00|1.30|0.00|tinted|1.00",
+  "ConeGeometry|0.00|2.55|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > neuron structure snapshot 1`] = `
+[
+  "CylinderGeometry|-0.10|0.60|-0.20|tinted|1.00",
+  "CylinderGeometry|-0.30|0.80|0.20|tinted|1.00",
+  "CylinderGeometry|-0.40|1.25|0.00|tinted|1.00",
+  "CylinderGeometry|0.10|1.45|-0.15|tinted|1.00",
+  "CylinderGeometry|0.75|1.00|0.00|tinted|1.00",
+  "SphereGeometry|0.00|1.00|0.00|tinted|1.00",
+  "SphereGeometry|1.45|1.12|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > package structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|0.55|0.00|fixed|1.00",
+  "BoxGeometry|0.00|0.55|0.00|fixed|1.00",
+  "BoxGeometry|0.00|0.55|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > packet structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|0.45|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > person structure snapshot 1`] = `
+[
+  "CylinderGeometry|-0.16|0.22|0.00|fixed|1.00",
+  "CylinderGeometry|-0.45|1.20|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|0.95|0.00|tinted|1.00",
+  "CylinderGeometry|0.16|0.22|0.00|fixed|1.00",
+  "CylinderGeometry|0.45|1.20|0.00|tinted|1.00",
+  "SphereGeometry|0.00|1.95|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > pie-chart structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.15|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|0.15|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > piston structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.75|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|1.65|0.00|tinted|1.00",
+  "SphereGeometry|0.00|0.22|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > prism structure snapshot 1`] = `
+[
+  "ConeGeometry|0.00|0.90|0.00|tinted|0.55",
+]
+`;
+
+exports[`structural snapshots > pulley structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|0.80|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|1.45|0.00|tinted|1.00",
+  "CylinderGeometry|0.50|0.75|0.00|fixed|1.00",
+  "TorusGeometry|0.00|1.45|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > pump structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|0.40|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|1.10|0.00|fixed|1.00",
+  "CylinderGeometry|0.80|0.55|0.00|fixed|1.00",
+  "SphereGeometry|0.00|1.50|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > raindrop structure snapshot 1`] = `
+[
+  "ConeGeometry|0.00|0.85|0.00|tinted|0.70",
+  "SphereGeometry|0.00|0.40|0.00|tinted|0.70",
+]
+`;
+
+exports[`structural snapshots > red-blood-cell structure snapshot 1`] = `
+[
+  "SphereGeometry|0.00|0.35|0.00|tinted|1.00",
+  "TorusGeometry|0.00|0.48|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > ring structure snapshot 1`] = `
+[
+  "TorusGeometry|0.00|1.10|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > river structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|0.10|-0.72|fixed|1.00",
+  "BoxGeometry|0.00|0.10|0.00|tinted|0.75",
+  "BoxGeometry|0.00|0.10|0.72|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > rod structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|1.00|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > root structure snapshot 1`] = `
+[
+  "CylinderGeometry|-0.25|0.30|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|0.60|0.00|tinted|1.00",
+  "CylinderGeometry|0.25|0.30|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > router structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|0.20|0.00|tinted|1.00",
+  "CylinderGeometry|-0.60|0.80|0.00|fixed|1.00",
+  "CylinderGeometry|0.60|0.80|0.00|fixed|1.00",
+  "SphereGeometry|0.00|0.42|0.40|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > satellite structure snapshot 1`] = `
+[
+  "BoxGeometry|-0.95|1.20|0.00|fixed|1.00",
+  "BoxGeometry|0.00|1.20|0.00|tinted|1.00",
+  "BoxGeometry|0.95|1.20|0.00|fixed|1.00",
+  "ConeGeometry|0.00|1.75|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > scale-balance structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|1.65|0.00|tinted|1.00",
+  "CylinderGeometry|-0.95|1.45|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|0.08|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|0.90|0.00|fixed|1.00",
+  "CylinderGeometry|0.95|1.75|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > seed structure snapshot 1`] = `
+[
+  "SphereGeometry|0.00|0.35|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > server structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|0.50|0.56|fixed|1.00",
+  "BoxGeometry|0.00|1.05|0.56|fixed|1.00",
+  "BoxGeometry|0.00|1.25|0.00|tinted|1.00",
+  "BoxGeometry|0.00|1.60|0.56|fixed|1.00",
+  "BoxGeometry|0.00|2.15|0.56|fixed|1.00",
+  "SphereGeometry|0.35|0.50|0.60|fixed|1.00",
+  "SphereGeometry|0.35|1.05|0.60|fixed|1.00",
+  "SphereGeometry|0.35|1.60|0.60|fixed|1.00",
+  "SphereGeometry|0.35|2.15|0.60|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > shield structure snapshot 1`] = `
+[
+  "SphereGeometry|0.00|1.05|0.00|tinted|1.00",
+  "TorusGeometry|0.00|1.05|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > shopping-cart structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|0.75|0.00|tinted|0.85",
+  "CylinderGeometry|-0.45|0.16|0.00|fixed|1.00",
+  "CylinderGeometry|0.45|0.16|0.00|fixed|1.00",
+  "CylinderGeometry|0.75|0.90|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > slab structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|0.20|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > smartphone structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|0.85|0.00|tinted|1.00",
+  "BoxGeometry|0.00|0.85|0.07|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > spark-plug structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.15|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|0.47|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|0.85|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|1.15|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > sphere structure snapshot 1`] = `
+[
+  "SphereGeometry|0.00|1.00|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > spring structure snapshot 1`] = `
+[
+  "TorusGeometry|0.00|0.20|0.00|tinted|1.00",
+  "TorusGeometry|0.00|0.50|0.00|tinted|1.00",
+  "TorusGeometry|0.00|0.80|0.00|tinted|1.00",
+  "TorusGeometry|0.00|1.10|0.00|tinted|1.00",
+  "TorusGeometry|0.00|1.40|0.00|tinted|1.00",
+  "TorusGeometry|0.00|1.70|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > star structure snapshot 1`] = `
+[
+  "ExtrudeGeometry|0.00|1.00|-0.15|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > stomach structure snapshot 1`] = `
+[
+  "CylinderGeometry|-0.50|1.85|0.00|tinted|1.00",
+  "CylinderGeometry|0.62|0.50|0.00|tinted|1.00",
+  "SphereGeometry|0.00|1.00|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > sun structure snapshot 1`] = `
+[
+  "CylinderGeometry|-0.00|0.30|0.00|tinted|1.00",
+  "CylinderGeometry|-0.81|0.64|0.00|tinted|1.00",
+  "CylinderGeometry|-0.81|2.26|0.00|tinted|1.00",
+  "CylinderGeometry|-1.15|1.45|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|2.60|0.00|tinted|1.00",
+  "CylinderGeometry|0.81|0.64|0.00|tinted|1.00",
+  "CylinderGeometry|0.81|2.26|0.00|tinted|1.00",
+  "CylinderGeometry|1.15|1.45|0.00|tinted|1.00",
+  "SphereGeometry|0.00|1.45|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > syringe structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.25|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|0.80|0.00|tinted|0.85",
+  "CylinderGeometry|0.00|1.05|0.00|fixed|0.35",
+  "CylinderGeometry|0.00|1.75|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|2.02|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > test-tube structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.55|0.00|tinted|0.85",
+  "CylinderGeometry|0.00|0.95|0.00|fixed|0.30",
+  "SphereGeometry|0.00|0.12|0.00|fixed|0.30",
+]
+`;
+
+exports[`structural snapshots > thermometer structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.95|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|1.05|0.00|fixed|0.35",
+  "SphereGeometry|0.00|0.26|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > tree structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.60|0.00|fixed|1.00",
+  "SphereGeometry|-0.50|2.25|0.00|tinted|1.00",
+  "SphereGeometry|0.00|1.90|0.00|tinted|1.00",
+  "SphereGeometry|0.50|2.30|0.00|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > tube structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|1.00|0.00|tinted|0.45",
+]
+`;
+
+exports[`structural snapshots > turbine structure snapshot 1`] = `
+[
+  "BoxGeometry|-0.22|1.39|0.00|tinted|1.00",
+  "BoxGeometry|-0.23|0.61|0.00|tinted|1.00",
+  "BoxGeometry|-0.45|1.00|0.00|tinted|1.00",
+  "BoxGeometry|0.23|0.61|0.00|tinted|1.00",
+  "BoxGeometry|0.23|1.39|0.00|tinted|1.00",
+  "BoxGeometry|0.45|1.00|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|1.00|0.00|fixed|1.00",
+  "TorusGeometry|0.00|1.00|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > valve structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.26|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|0.75|0.00|fixed|1.00",
+  "CylinderGeometry|0.00|1.20|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > vault structure snapshot 1`] = `
+[
+  "BoxGeometry|0.00|0.90|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|0.95|0.73|fixed|1.00",
+  "TorusGeometry|0.00|0.95|0.80|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > vein structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|0.40|0.00|tinted|0.45",
+  "TorusGeometry|-1.50|0.40|0.00|fixed|1.00",
+  "TorusGeometry|1.50|0.40|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > virus structure snapshot 1`] = `
+[
+  "SphereGeometry|-0.12|0.47|-0.46|fixed|1.00",
+  "SphereGeometry|-0.20|0.17|-0.08|fixed|1.00",
+  "SphereGeometry|-0.20|0.37|0.38|fixed|1.00",
+  "SphereGeometry|-0.26|0.97|-0.24|fixed|1.00",
+  "SphereGeometry|-0.49|0.67|0.09|fixed|1.00",
+  "SphereGeometry|0.00|0.62|0.00|tinted|1.00",
+  "SphereGeometry|0.04|0.87|0.43|fixed|1.00",
+  "SphereGeometry|0.22|1.07|0.00|fixed|1.00",
+  "SphereGeometry|0.29|0.77|-0.38|fixed|1.00",
+  "SphereGeometry|0.34|0.27|-0.12|fixed|1.00",
+  "SphereGeometry|0.42|0.57|0.27|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > wedge structure snapshot 1`] = `
+[
+  "ExtrudeGeometry|0.00|0.00|-0.80|tinted|1.00",
+]
+`;
+
+exports[`structural snapshots > wheel structure snapshot 1`] = `
+[
+  "CylinderGeometry|0.00|1.00|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|1.00|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|1.00|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|1.00|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|1.00|0.00|tinted|1.00",
+  "CylinderGeometry|0.00|1.00|0.00|tinted|1.00",
+  "TorusGeometry|0.00|1.00|0.00|fixed|1.00",
+]
+`;
+
+exports[`structural snapshots > white-blood-cell structure snapshot 1`] = `
+[
+  "SphereGeometry|-0.11|0.06|0.09|tinted|1.00",
+  "SphereGeometry|-0.11|1.04|-0.09|tinted|1.00",
+  "SphereGeometry|-0.45|0.33|0.16|tinted|1.00",
+  "SphereGeometry|-0.45|0.77|-0.16|tinted|1.00",
+  "SphereGeometry|0.00|0.55|0.00|tinted|1.00",
+  "SphereGeometry|0.31|0.16|-0.19|tinted|1.00",
+  "SphereGeometry|0.31|0.94|0.19|tinted|1.00",
+  "SphereGeometry|0.50|0.55|0.00|tinted|1.00",
+]
+`;
