@@ -1,0 +1,66 @@
+name: Nightly golden run
+
+on:
+  schedule:
+    # 03:41 UTC — off the congested minute-0/30 slots and outside 06:00-09:00 PT.
+    - cron: "41 3 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  golden:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check secrets
+        id: gate
+        env:
+          HAS_KEY: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+          HAS_DB: ${{ secrets.SUPABASE_URL != '' }}
+        run: |
+          echo "run=${HAS_KEY}" >> "$GITHUB_OUTPUT"
+          if [ "$HAS_KEY" != "true" ]; then
+            echo "::warning::ANTHROPIC_API_KEY secret missing — nightly golden run skipped"
+          fi
+          if [ "$HAS_DB" != "true" ]; then
+            echo "::warning::SUPABASE_URL missing — results will not reach golden_runs"
+          fi
+
+      - uses: pnpm/action-setup@v4
+        if: steps.gate.outputs.run == 'true'
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.run == 'true'
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: astral-sh/setup-uv@v5
+        if: steps.gate.outputs.run == 'true'
+        with:
+          enable-cache: true
+          cache-dependency-glob: apps/api/uv.lock
+
+      - name: Install
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          pnpm install --frozen-lockfile
+          uv --directory apps/api sync
+
+      - name: Golden run (caching off, writes golden_runs)
+        if: steps.gate.outputs.run == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          VOYAGE_API_KEY: ${{ secrets.VOYAGE_API_KEY }}
+          PIPELINE: ${{ vars.PIPELINE || 'single' }}
+        run: |
+          pnpm golden:run 2>&1 | tee golden-run.log
+
+      - name: Upload run log
+        if: always() && steps.gate.outputs.run == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: golden-run-log
+          path: golden-run.log

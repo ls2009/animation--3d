@@ -74,7 +74,7 @@ def create_app(
     app = FastAPI(title="Sinaa Motion Lab API")
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],  # tightened at deploy time (Phase 7)
+        allow_origins=settings.allowed_origins,  # set ALLOWED_ORIGINS in prod
         allow_methods=["*"],
         allow_headers=["*"],
     )

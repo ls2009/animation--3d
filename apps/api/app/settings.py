@@ -45,6 +45,14 @@ class Settings:
     )
     # Feature flag: which pipeline serves generations ("single" | "crew").
     pipeline: str = field(default_factory=lambda: os.environ.get("PIPELINE", "single"))
+    # Comma-separated origins for CORS; "*" only outside production.
+    allowed_origins: list[str] = field(
+        default_factory=lambda: [
+            origin.strip()
+            for origin in os.environ.get("ALLOWED_ORIGINS", "*").split(",")
+            if origin.strip()
+        ]
+    )
 
     repo_root: Path = REPO_ROOT
     prompt_dir: Path = API_DIR / "prompts"
