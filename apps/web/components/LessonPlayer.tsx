@@ -8,8 +8,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPlayer, type Player } from "@sinaa/engine";
 import type { Script } from "@sinaa/dsl";
+import FeedbackRow from "./FeedbackRow";
 
-export default function LessonPlayer({ script }: { script: Script }) {
+export default function LessonPlayer({
+  script,
+  lessonId,
+}: {
+  script: Script;
+  /** When set, the feedback row appears after the quiz and posts to the API. */
+  lessonId?: string;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const labelsRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<Player | null>(null);
@@ -87,6 +95,34 @@ export default function LessonPlayer({ script }: { script: Script }) {
     setSceneTime(t);
   }, []);
 
+  // Keyboard transport: Space play/pause, arrows switch scenes, Home rewinds.
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target?.isContentEditable) {
+        return;
+      }
+      const player = playerRef.current;
+      if (!player) return;
+      if (e.key === " " || e.code === "Space") {
+        e.preventDefault();
+        togglePlay();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        seek(Math.min(player.sceneIndex + 1, script.scenes.length - 1), 0);
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        seek(Math.max(player.sceneIndex - 1, 0), 0);
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        seek(player.sceneIndex, 0);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [seek, togglePlay, script.scenes.length]);
+
   const activeNarration = (() => {
     let text = "";
     for (const n of scene.narration) if (n.t <= sceneTime) text = n.text;
@@ -97,7 +133,7 @@ export default function LessonPlayer({ script }: { script: Script }) {
     <div className="space-y-4">
       {/* Stage */}
       <div className="relative overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900">
-        <canvas ref={canvasRef} className="block h-[420px] w-full touch-none" />
+        <canvas ref={canvasRef} className="block h-[300px] w-full touch-none sm:h-[420px]" />
         <div
           ref={labelsRef}
           className="pointer-events-none absolute inset-0 overflow-hidden text-xs font-medium text-neutral-100 [&>div]:rounded [&>div]:bg-black/55 [&>div]:px-1.5 [&>div]:py-0.5"
@@ -162,6 +198,19 @@ export default function LessonPlayer({ script }: { script: Script }) {
           />
           Voice
         </label>
+      </div>
+
+      {/* Narration card — captions stay on the stage; this card keeps the
+          words readable at any size and for screen readers. */}
+      <div
+        aria-live="polite"
+        className="rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-3"
+        data-testid="narration-card"
+      >
+        <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+          Scene {sceneIndex + 1} · {scene.title}
+        </p>
+        <p className="mt-1 text-sm text-neutral-200">{activeNarration || "…"}</p>
       </div>
 
       {/* Scene strip */}
@@ -237,6 +286,11 @@ export default function LessonPlayer({ script }: { script: Script }) {
           </div>
           {showQuiz && <Quiz script={script} />}
         </div>
+      )}
+
+      {/* Feedback row — after the quiz, tied to the current scene. */}
+      {lessonId && showQuiz && (
+        <FeedbackRow lessonId={lessonId} sceneIndex={sceneIndex} />
       )}
     </div>
   );

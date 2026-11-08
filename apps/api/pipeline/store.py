@@ -112,6 +112,21 @@ class Store(Protocol):
 
     def list_prop_requests(self) -> list[dict[str, Any]]: ...
 
+    # -- feedback ---------------------------------------------------------------
+    def save_feedback(
+        self,
+        lesson_id: str,
+        verdict: str,
+        scene_index: int | None,
+        note: str | None,
+        viewer_id: str | None = None,
+    ) -> None: ...
+
+    def list_feedback(self, limit: int = 200) -> list[dict[str, Any]]: ...
+
+    # -- lesson listing -----------------------------------------------------------
+    def list_lessons(self, status: str | None = "ready", limit: int = 20) -> list[Lesson]: ...
+
 
 def _now() -> str:
     return datetime.now(UTC).isoformat()
@@ -151,6 +166,15 @@ class SqliteStore:
                   payload text,
                   created_at text not null,
                   unique (lesson_id, seq)
+                );
+                create table if not exists feedback (
+                  id text primary key,
+                  lesson_id text not null,
+                  viewer_id text,
+                  verdict text not null,
+                  scene_index integer,
+                  note text,
+                  created_at text not null
                 );
                 create table if not exists storyboards (
                   id text primary key,
@@ -448,6 +472,51 @@ class SqliteStore:
         return [dict(row) for row in rows]
 
 
+
+    # -- feedback ---------------------------------------------------------------
+    FEEDBACK_VERDICTS = ("good", "wrong", "confusing", "boring", "broken")
+
+    def save_feedback(
+        self,
+        lesson_id: str,
+        verdict: str,
+        scene_index: int | None,
+        note: str | None,
+        viewer_id: str | None = None,
+    ) -> None:
+        if verdict not in self.FEEDBACK_VERDICTS:
+            raise ValueError(f"unknown verdict {verdict}")
+        with self._lock, self._conn() as conn:
+            conn.execute(
+                "insert into feedback (id, lesson_id, viewer_id, verdict, scene_index, note,"
+                " created_at) values (?,?,?,?,?,?,?)",
+                (str(uuid.uuid4()), lesson_id, viewer_id, verdict, scene_index, note, _now()),
+            )
+
+    def list_feedback(self, limit: int = 200) -> list[dict[str, Any]]:
+        with self._conn() as conn:
+            rows = conn.execute(
+                "select f.*, l.topic from feedback f left join lessons l on l.id = f.lesson_id"
+                " order by f.created_at desc limit ?",
+                (limit,),
+            ).fetchall()
+        return [dict(row) for row in rows]
+
+    # -- lesson listing -----------------------------------------------------------
+    def list_lessons(self, status: str | None = "ready", limit: int = 20) -> list[Lesson]:
+        with self._conn() as conn:
+            if status is None:
+                rows = conn.execute(
+                    "select * from lessons order by created_at desc limit ?", (limit,)
+                ).fetchall()
+            else:
+                rows = conn.execute(
+                    "select * from lessons where status=? order by created_at desc limit ?",
+                    (status, limit),
+                ).fetchall()
+        return [self._row_to_lesson(row) for row in rows]
+
+
 class SupabaseStore:
     """Supabase-backed store (service role key; used once credentials exist)."""
 
@@ -678,3 +747,50 @@ class SupabaseStore:
             .execute()
         )
         return list(result.data)
+
+    # -- feedback ---------------------------------------------------------------
+    FEEDBACK_VERDICTS = ("good", "wrong", "confusing", "boring", "broken")
+
+    def save_feedback(
+        self,
+        lesson_id: str,
+        verdict: str,
+        scene_index: int | None,
+        note: str | None,
+        viewer_id: str | None = None,
+    ) -> None:
+        if verdict not in self.FEEDBACK_VERDICTS:
+            raise ValueError(f"unknown verdict {verdict}")
+        self._client.table("feedback").insert(
+            {
+                "lesson_id": lesson_id,
+                "viewer_id": viewer_id,
+                "verdict": verdict,
+                "scene_index": scene_index,
+                "note": note,
+            }
+        ).execute()
+
+    def list_feedback(self, limit: int = 200) -> list[dict[str, Any]]:
+        result = (
+            self._client.table("feedback")
+            .select("*, lessons(topic)")
+            .order("created_at", desc=True)
+            .limit(limit)
+            .execute()
+        )
+        rows = []
+        for row in result.data:
+            flat = dict(row)
+            lesson = flat.pop("lessons", None) or {}
+            flat["topic"] = lesson.get("topic")
+            rows.append(flat)
+        return rows
+
+    # -- lesson listing -----------------------------------------------------------
+    def list_lessons(self, status: str | None = "ready", limit: int = 20) -> list[Lesson]:
+        query = self._client.table("lessons").select("*")
+        if status is not None:
+            query = query.eq("status", status)
+        result = query.order("created_at", desc=True).limit(limit).execute()
+        return [self._row_to_lesson(row) for row in result.data]

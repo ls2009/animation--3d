@@ -1,10 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { ScriptSchema, type Script } from "@sinaa/dsl";
 import LessonPlayer from "../../../components/LessonPlayer";
-import { getLesson, type LessonStatus } from "../../../lib/api";
+import {
+  createLesson,
+  getLesson,
+  listLessons,
+  type LessonListItem,
+  type LessonStatus,
+} from "../../../lib/api";
+
+const LANGUAGES = ["en", "fr", "ar"] as const;
 
 const PIPELINE_STEPS = [
   "queued",
@@ -16,9 +25,42 @@ const PIPELINE_STEPS = [
 
 export default function LessonPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const router = useRouter();
   const [lesson, setLesson] = useState<LessonStatus | null>(null);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [showScript, setShowScript] = useState(false);
+  const [rail, setRail] = useState<LessonListItem[]>([]);
+  const [shared, setShared] = useState(false);
+  const [switching, setSwitching] = useState<string | null>(null);
+
+  useEffect(() => {
+    listLessons(12).then(setRail).catch(() => setRail([]));
+  }, [id]);
+
+  async function copyShareLink() {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setShared(true);
+      setTimeout(() => setShared(false), 2000);
+    } catch {
+      // Clipboard unavailable (permissions); the URL bar still works.
+    }
+  }
+
+  async function switchLanguage(language: string) {
+    if (!lesson || language === lesson.language) return;
+    setSwitching(language);
+    try {
+      const { id: newId } = await createLesson({
+        topic: lesson.topic,
+        audience: lesson.audience,
+        language,
+      });
+      router.push(`/lessons/${newId}`);
+    } finally {
+      setSwitching(null);
+    }
+  }
 
   useEffect(() => {
     let stopped = false;
@@ -66,9 +108,38 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
               </p>
             )}
           </div>
-          <Link href="/new" className="text-sm text-sky-400 hover:underline">
-            New lesson
-          </Link>
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Language switch: regenerates this topic in another language. */}
+            {lesson && (
+              <div className="flex gap-1" role="group" aria-label="Lesson language">
+                {LANGUAGES.map((lang) => (
+                  <button
+                    key={lang}
+                    onClick={() => switchLanguage(lang)}
+                    disabled={switching !== null}
+                    className={`rounded px-2 py-1 text-xs uppercase ${
+                      lesson.language === lang
+                        ? "bg-sky-500/20 text-sky-300"
+                        : "text-neutral-400 hover:text-neutral-200"
+                    }`}
+                    data-testid={`lang-${lang}`}
+                  >
+                    {switching === lang ? "…" : lang}
+                  </button>
+                ))}
+              </div>
+            )}
+            <button
+              onClick={copyShareLink}
+              className="rounded-lg border border-neutral-700 px-3 py-1.5 text-xs text-neutral-300 hover:border-sky-500"
+              data-testid="share"
+            >
+              {shared ? "Link copied ✓" : "Share"}
+            </button>
+            <Link href="/new" className="text-sm text-sky-400 hover:underline">
+              New lesson
+            </Link>
+          </div>
         </header>
 
         {fetchError && (
@@ -96,7 +167,7 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
                     key={step}
                     className={`rounded-full border px-3 py-1 text-xs ${
                       active
-                        ? "animate-pulse border-sky-500 bg-sky-500/20 text-sky-200"
+                        ? "border-sky-500 bg-sky-500/20 text-sky-200 motion-safe:animate-pulse"
                         : reached
                           ? "border-sky-700 bg-sky-900/30 text-sky-300"
                           : "border-neutral-800 text-neutral-500"
@@ -122,7 +193,32 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
           </div>
         )}
 
-        {script && <LessonPlayer script={script} />}
+        {script && <LessonPlayer script={script} lessonId={id} />}
+
+        {/* Lesson rail: other generated lessons, one tap away. */}
+        {rail.filter((item) => item.id !== id).length > 0 && (
+          <nav aria-label="Other lessons" data-testid="lesson-rail">
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-500">
+              More lessons
+            </h2>
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {rail
+                .filter((item) => item.id !== id)
+                .map((item) => (
+                  <Link
+                    key={item.id}
+                    href={`/lessons/${item.id}`}
+                    className="min-w-48 shrink-0 rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-3 transition hover:border-sky-600"
+                  >
+                    <p className="truncate text-sm text-neutral-200">{item.title}</p>
+                    <p className="mt-0.5 truncate text-xs text-neutral-500">
+                      {item.audience} · {item.language}
+                    </p>
+                  </Link>
+                ))}
+            </div>
+          </nav>
+        )}
 
         {lesson?.status === "ready" && (
           <div className="rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-3">

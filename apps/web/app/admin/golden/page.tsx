@@ -25,6 +25,22 @@ interface GoldenRun {
   } | null;
 }
 
+interface FeedbackRow {
+  id: string;
+  lesson_id: string;
+  topic: string | null;
+  verdict: string;
+  scene_index: number | null;
+  note: string | null;
+  created_at: string;
+}
+
+interface FeedbackBacklog {
+  engine_backlog: FeedbackRow[];
+  prompt_backlog: FeedbackRow[];
+  good: FeedbackRow[];
+}
+
 interface GoldenResult {
   topic_id: string;
   lesson_id: string | null;
@@ -55,7 +71,15 @@ export default function GoldenDashboard() {
   const [runs, setRuns] = useState<GoldenRun[] | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [results, setResults] = useState<GoldenResult[] | null>(null);
+  const [backlog, setBacklog] = useState<FeedbackBacklog | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch(`${API_URL}/feedback`, { cache: "no-store" })
+      .then((r) => r.json())
+      .then(setBacklog)
+      .catch(() => setBacklog(null));
+  }, []);
 
   useEffect(() => {
     fetch(`${API_URL}/golden/runs?limit=5`, { cache: "no-store" })
@@ -204,7 +228,56 @@ export default function GoldenDashboard() {
             </table>
           </section>
         )}
+        {backlog && (
+          <section className="grid gap-4 md:grid-cols-2" data-testid="feedback-backlog">
+            <BacklogCard
+              title="Engine backlog (broken)"
+              tone="rose"
+              rows={backlog.engine_backlog}
+            />
+            <BacklogCard
+              title="Prompt & prop backlog (wrong / confusing / boring)"
+              tone="amber"
+              rows={backlog.prompt_backlog}
+            />
+          </section>
+        )}
       </div>
     </main>
+  );
+}
+
+function BacklogCard({
+  title,
+  tone,
+  rows,
+}: {
+  title: string;
+  tone: "rose" | "amber";
+  rows: FeedbackRow[];
+}) {
+  const toneCls = tone === "rose" ? "text-rose-300" : "text-amber-300";
+  return (
+    <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-4">
+      <h2 className={`mb-2 text-sm font-semibold ${toneCls}`}>
+        {title} <span className="text-neutral-500">({rows.length})</span>
+      </h2>
+      {rows.length === 0 ? (
+        <p className="text-xs text-neutral-500">Nothing here — good sign.</p>
+      ) : (
+        <ul className="space-y-2">
+          {rows.slice(0, 10).map((row) => (
+            <li key={row.id} className="rounded-lg bg-neutral-950 px-3 py-2 text-xs">
+              <span className="font-semibold text-neutral-200">{row.verdict}</span>
+              {row.scene_index !== null && (
+                <span className="text-neutral-500"> · scene {row.scene_index + 1}</span>
+              )}
+              {row.topic && <span className="text-neutral-400"> · {row.topic}</span>}
+              {row.note && <p className="mt-1 text-neutral-400">{row.note}</p>}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }

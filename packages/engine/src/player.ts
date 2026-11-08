@@ -187,6 +187,8 @@ export function createPlayer(
   }
 
   let lastFrame = 0;
+  let lastTickScene = -1;
+  let lastTickTime = -1;
   function frame(now: number): void {
     if (disposed) return;
     requestAnimationFrame(frame);
@@ -213,7 +215,13 @@ export function createPlayer(
     applyState(state);
     orbit.update();
     renderer.render(scene3, camera);
-    emit("tick", sceneIndex, sceneTime, script.scenes[sceneIndex]!.duration);
+    // Emit ticks only when the transport actually moved — otherwise a paused
+    // player re-renders its host UI at 60fps for nothing.
+    if (sceneIndex !== lastTickScene || Math.abs(sceneTime - lastTickTime) >= 0.04) {
+      lastTickScene = sceneIndex;
+      lastTickTime = sceneTime;
+      emit("tick", sceneIndex, sceneTime, script.scenes[sceneIndex]!.duration);
+    }
   }
 
   function setScene(i: number, t: number, keepPlaying: boolean): void {

@@ -27,6 +27,12 @@ class LessonRequest(BaseModel):
     language: str = Field(min_length=2, max_length=12)
 
 
+class FeedbackRequest(BaseModel):
+    verdict: str = Field(pattern="^(good|wrong|confusing|boring|broken)$")
+    scene_index: int | None = Field(default=None, ge=0, le=8)
+    note: str | None = Field(default=None, max_length=1000)
+
+
 def build_store(settings: Settings) -> Store:
     if settings.supabase_configured:
         return SupabaseStore(settings.supabase_url, settings.supabase_service_role_key)
@@ -138,6 +144,53 @@ def create_app(
         if store.get_lesson(lesson_id) is None:
             raise HTTPException(status_code=404, detail="lesson not found")
         return {"events": store.list_events(lesson_id)}
+
+    @app.get("/lessons")
+    def list_lessons(limit: int = 20) -> dict:
+        store: Store = app.state.store
+        lessons = store.list_lessons(status="ready", limit=min(max(limit, 1), 50))
+        return {
+            "lessons": [
+                {
+                    "id": lesson.id,
+                    "topic": lesson.topic,
+                    "audience": lesson.audience,
+                    "language": lesson.language,
+                    "title": (lesson.current_script or {}).get("title", lesson.topic),
+                    "created_at": lesson.created_at,
+                }
+                for lesson in lessons
+            ]
+        }
+
+    @app.post("/lessons/{lesson_id}/feedback", status_code=201)
+    def post_feedback(lesson_id: str, request: FeedbackRequest) -> dict:
+        store: Store = app.state.store
+        if store.get_lesson(lesson_id) is None:
+            raise HTTPException(status_code=404, detail="lesson not found")
+        store.save_feedback(lesson_id, request.verdict, request.scene_index, request.note)
+        store.save_event(
+            lesson_id,
+            "feedback",
+            role="viewer",
+            payload={
+                "verdict": request.verdict,
+                "scene_index": request.scene_index,
+                "note": request.note,
+            },
+        )
+        return {"ok": True}
+
+    @app.get("/feedback")
+    def feedback_backlog(limit: int = 200) -> dict:
+        """Grouped for the dashboard: broken -> engine backlog; the rest ->
+        prompt & prop backlogs."""
+        store: Store = app.state.store
+        rows = store.list_feedback(limit=min(max(limit, 1), 500))
+        engine = [r for r in rows if r["verdict"] == "broken"]
+        prompts = [r for r in rows if r["verdict"] in ("wrong", "confusing", "boring")]
+        praise = [r for r in rows if r["verdict"] == "good"]
+        return {"engine_backlog": engine, "prompt_backlog": prompts, "good": praise}
 
     @app.get("/golden/runs")
     def golden_runs(limit: int = 5) -> dict:
