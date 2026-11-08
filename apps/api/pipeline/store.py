@@ -96,6 +96,22 @@ class Store(Protocol):
 
     def previous_golden_run(self, before_run_id: str) -> dict[str, Any] | None: ...
 
+    # -- storyboards (exemplar store) ----------------------------------------
+    def save_storyboard(
+        self,
+        lesson_id: str,
+        storyboard: dict[str, Any],
+        passed: bool,
+        embedding: list[float] | None,
+    ) -> None: ...
+
+    def nearest_storyboards(self, embedding: list[float], k: int = 3) -> list[dict[str, Any]]: ...
+
+    # -- prop requests ---------------------------------------------------------
+    def upsert_prop_request(self, name: str, nearest_existing: str, lesson_id: str) -> int: ...
+
+    def list_prop_requests(self) -> list[dict[str, Any]]: ...
+
 
 def _now() -> str:
     return datetime.now(UTC).isoformat()
@@ -135,6 +151,21 @@ class SqliteStore:
                   payload text,
                   created_at text not null,
                   unique (lesson_id, seq)
+                );
+                create table if not exists storyboards (
+                  id text primary key,
+                  lesson_id text not null,
+                  embedding text,
+                  passed integer not null default 0,
+                  storyboard text not null,
+                  created_at text not null
+                );
+                create table if not exists prop_requests (
+                  name text primary key,
+                  count integer not null default 1,
+                  nearest_existing text,
+                  last_lesson_id text,
+                  created_at text not null
                 );
                 create table if not exists golden_runs (
                   id text primary key,
@@ -355,6 +386,68 @@ class SqliteStore:
         return None
 
 
+
+    # -- storyboards (exemplar store) ----------------------------------------
+    def save_storyboard(
+        self,
+        lesson_id: str,
+        storyboard: dict[str, Any],
+        passed: bool,
+        embedding: list[float] | None,
+    ) -> None:
+        with self._lock, self._conn() as conn:
+            conn.execute(
+                "insert into storyboards (id, lesson_id, embedding, passed, storyboard,"
+                " created_at) values (?,?,?,?,?,?)",
+                (
+                    str(uuid.uuid4()),
+                    lesson_id,
+                    json.dumps(embedding) if embedding is not None else None,
+                    1 if passed else 0,
+                    json.dumps(storyboard),
+                    _now(),
+                ),
+            )
+
+    def nearest_storyboards(self, embedding: list[float], k: int = 3) -> list[dict[str, Any]]:
+        from .embeddings import cosine
+
+        with self._conn() as conn:
+            rows = conn.execute(
+                "select storyboard, embedding from storyboards"
+                " where passed=1 and embedding is not null"
+            ).fetchall()
+        scored = []
+        for row in rows:
+            emb = json.loads(row["embedding"])
+            scored.append((cosine(embedding, emb), json.loads(row["storyboard"])))
+        scored.sort(key=lambda pair: pair[0], reverse=True)
+        return [sb for _, sb in scored[:k]]
+
+    # -- prop requests ---------------------------------------------------------
+    def upsert_prop_request(self, name: str, nearest_existing: str, lesson_id: str) -> int:
+        with self._lock, self._conn() as conn:
+            conn.execute(
+                "insert into prop_requests (name, count, nearest_existing, last_lesson_id,"
+                " created_at) values (?,1,?,?,?)"
+                " on conflict(name) do update set count=count+1,"
+                " nearest_existing=excluded.nearest_existing,"
+                " last_lesson_id=excluded.last_lesson_id",
+                (name, nearest_existing, lesson_id, _now()),
+            )
+            row = conn.execute(
+                "select count from prop_requests where name=?", (name,)
+            ).fetchone()
+        return int(row["count"])
+
+    def list_prop_requests(self) -> list[dict[str, Any]]:
+        with self._conn() as conn:
+            rows = conn.execute(
+                "select * from prop_requests order by count desc, name"
+            ).fetchall()
+        return [dict(row) for row in rows]
+
+
 class SupabaseStore:
     """Supabase-backed store (service role key; used once credentials exist)."""
 
@@ -515,3 +608,73 @@ class SupabaseStore:
             if run["id"] != before_run_id and run.get("summary") is not None:
                 return run
         return None
+
+    # -- storyboards (exemplar store) ----------------------------------------
+    def save_storyboard(
+        self,
+        lesson_id: str,
+        storyboard: dict[str, Any],
+        passed: bool,
+        embedding: list[float] | None,
+    ) -> None:
+        self._client.table("storyboards").insert(
+            {
+                "lesson_id": lesson_id,
+                "embedding": embedding,
+                "passed": passed,
+                "storyboard": storyboard,
+            }
+        ).execute()
+
+    def nearest_storyboards(self, embedding: list[float], k: int = 3) -> list[dict[str, Any]]:
+        # Client-side cosine over recent passed storyboards; swap for a
+        # pgvector RPC when scale demands it.
+        from .embeddings import cosine
+
+        result = (
+            self._client.table("storyboards")
+            .select("storyboard, embedding")
+            .eq("passed", True)
+            .not_.is_("embedding", "null")
+            .limit(200)
+            .execute()
+        )
+        scored = [
+            (cosine(embedding, row["embedding"]), row["storyboard"]) for row in result.data
+        ]
+        scored.sort(key=lambda pair: pair[0], reverse=True)
+        return [sb for _, sb in scored[:k]]
+
+    # -- prop requests ---------------------------------------------------------
+    def upsert_prop_request(self, name: str, nearest_existing: str, lesson_id: str) -> int:
+        existing = (
+            self._client.table("prop_requests").select("count").eq("name", name).execute()
+        )
+        if existing.data:
+            count = existing.data[0]["count"] + 1
+            self._client.table("prop_requests").update(
+                {
+                    "count": count,
+                    "nearest_existing": nearest_existing,
+                    "last_lesson_id": lesson_id,
+                }
+            ).eq("name", name).execute()
+            return count
+        self._client.table("prop_requests").insert(
+            {
+                "name": name,
+                "count": 1,
+                "nearest_existing": nearest_existing,
+                "last_lesson_id": lesson_id,
+            }
+        ).execute()
+        return 1
+
+    def list_prop_requests(self) -> list[dict[str, Any]]:
+        result = (
+            self._client.table("prop_requests")
+            .select("*")
+            .order("count", desc=True)
+            .execute()
+        )
+        return list(result.data)

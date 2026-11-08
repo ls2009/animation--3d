@@ -52,9 +52,18 @@ class FakeModel:
     def __init__(self, responses: list[ModelResponse]):
         self.responses = list(responses)
         self.calls = 0
+        self.seen: list[dict] = []
 
     def complete(self, *, system, user, model, max_tokens):  # noqa: ANN001
         self.calls += 1
+        self.seen.append({"system": system, "user": user, "model": model})
+        if not self.responses:
+            raise AssertionError("FakeModel exhausted — unexpected extra model call")
+        return self.responses.pop(0)
+
+    def complete_blocks(self, *, system, blocks, model, max_tokens):  # noqa: ANN001
+        self.calls += 1
+        self.seen.append({"system": system, "blocks": blocks, "model": model})
         if not self.responses:
             raise AssertionError("FakeModel exhausted — unexpected extra model call")
         return self.responses.pop(0)

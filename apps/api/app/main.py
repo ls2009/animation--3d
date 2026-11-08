@@ -14,6 +14,7 @@ from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
+from pipeline.producer import CrewPipeline
 from pipeline.single_pass import SinglePassPipeline
 from pipeline.store import SqliteStore, Store, SupabaseStore
 
@@ -33,9 +34,20 @@ def build_store(settings: Settings) -> Store:
     return SqliteStore(settings.sqlite_path)
 
 
-def build_pipeline(settings: Settings, store: Store) -> SinglePassPipeline:
+def build_pipeline(settings: Settings, store: Store) -> SinglePassPipeline | CrewPipeline:
     from pipeline.model_client import AnthropicClient
 
+    if settings.pipeline == "crew":
+        return CrewPipeline(
+            store,
+            AnthropicClient(),
+            repo_root=settings.repo_root,
+            prompt_dir=settings.prompt_dir,
+            catalog_path=settings.catalog_path,
+            model_complex=settings.model_complex,
+            model_default=settings.model_default,
+            prop_backlog_path=settings.repo_root / "docs" / "prop-backlog.md",
+        )
     return SinglePassPipeline(
         store,
         AnthropicClient(),

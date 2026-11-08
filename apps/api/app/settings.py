@@ -43,6 +43,8 @@ class Settings:
     model_default: str = field(
         default_factory=lambda: os.environ.get("SINAA_MODEL_DEFAULT", "claude-sonnet-5-5")
     )
+    # Feature flag: which pipeline serves generations ("single" | "crew").
+    pipeline: str = field(default_factory=lambda: os.environ.get("PIPELINE", "single"))
 
     repo_root: Path = REPO_ROOT
     prompt_dir: Path = API_DIR / "prompts"

@@ -100,11 +100,14 @@ def run_topic(pipeline: SinglePassPipeline, store: Store, topic: dict[str, Any])
     repairs = None
     cost = 0.0
     error = None
+    first_inspection: float | None = None
     for event in tail:
         if event["kind"] == "validator_repairs":
             repairs = event["payload"]["repair_count"]
         if event["kind"] == "agent_call":
             cost += float(event["payload"].get("cost_usd") or 0)
+        if event["kind"] == "inspection" and first_inspection is None:
+            first_inspection = float(event["payload"].get("pass_rate") or 0)
         if event["kind"] == "failed":
             error = f"{event['payload'].get('error_code')}: {event['payload'].get('message')}"
 
@@ -113,7 +116,7 @@ def run_topic(pipeline: SinglePassPipeline, store: Store, topic: dict[str, Any])
         lesson_id=lesson.id,
         status=refreshed.status if refreshed else "failed",
         repairs=repairs,
-        inspector_pass_rate=None,  # single-pass has no Inspector (Phase 5)
+        inspector_pass_rate=first_inspection,  # first-pass rate; None on single-pass
         runtime_s=runtime_s,
         cost_usd=round(cost, 6),
         script=refreshed.current_script if refreshed and refreshed.status == "ready" else None,
@@ -197,9 +200,8 @@ def run_golden(
     repo_root: Path,
     workers: int = 4,
 ) -> tuple[str, dict[str, Any], list[str]]:
-    run_id = store.create_golden_run(
-        git_sha(repo_root), {"single_pass": pipeline.prompt_version}
-    )
+    versions = getattr(pipeline, "versions", None) or {"single_pass": pipeline.prompt_version}
+    run_id = store.create_golden_run(git_sha(repo_root), dict(versions))
     with ThreadPoolExecutor(max_workers=workers) as pool:
         results = list(pool.map(lambda t: run_topic(pipeline, store, t), topics))
     for r in results:
