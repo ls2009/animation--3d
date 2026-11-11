@@ -18,7 +18,13 @@ load_dotenv(API_DIR / ".env", override=True)
 
 @dataclass
 class Settings:
-    anthropic_api_key: str = field(default_factory=lambda: os.environ.get("ANTHROPIC_API_KEY", ""))
+    # SINAA_ANTHROPIC_KEY is checked first: some managed environments reserve
+    # the canonical ANTHROPIC_API_KEY name for the session runtime and strip
+    # it from injected variables, so a neutral alias is needed there.
+    anthropic_api_key: str = field(
+        default_factory=lambda: os.environ.get("SINAA_ANTHROPIC_KEY", "")
+        or os.environ.get("ANTHROPIC_API_KEY", "")
+    )
     supabase_url: str = field(default_factory=lambda: os.environ.get("SUPABASE_URL", ""))
     supabase_anon_key: str = field(default_factory=lambda: os.environ.get("SUPABASE_ANON_KEY", ""))
     supabase_service_role_key: str = field(

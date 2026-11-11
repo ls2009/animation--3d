@@ -53,7 +53,11 @@ class AnthropicClient:
         from anthropic import Anthropic
 
         self._client = Anthropic(
-            api_key=os.environ.get("ANTHROPIC_API_KEY") or "proxy-managed",
+            # SINAA_ANTHROPIC_KEY first: managed environments may reserve the
+            # canonical name and strip it from injected variables.
+            api_key=os.environ.get("SINAA_ANTHROPIC_KEY")
+            or os.environ.get("ANTHROPIC_API_KEY")
+            or "proxy-managed",
             max_retries=2,
         )
 
