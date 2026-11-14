@@ -55,7 +55,8 @@ class AnthropicClient:
         self._client = Anthropic(
             # SINAA_ANTHROPIC_KEY first: managed environments may reserve the
             # canonical name and strip it from injected variables.
-            api_key=os.environ.get("SINAA_ANTHROPIC_KEY")
+            api_key=os.environ.get("SINAA_MODEL_ACCESS")
+            or os.environ.get("SINAA_ANTHROPIC_KEY")
             or os.environ.get("ANTHROPIC_API_KEY")
             or "proxy-managed",
             max_retries=2,

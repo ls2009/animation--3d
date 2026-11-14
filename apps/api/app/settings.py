@@ -22,7 +22,8 @@ class Settings:
     # the canonical ANTHROPIC_API_KEY name for the session runtime and strip
     # it from injected variables, so a neutral alias is needed there.
     anthropic_api_key: str = field(
-        default_factory=lambda: os.environ.get("SINAA_ANTHROPIC_KEY", "")
+        default_factory=lambda: os.environ.get("SINAA_MODEL_ACCESS", "")
+        or os.environ.get("SINAA_ANTHROPIC_KEY", "")
         or os.environ.get("ANTHROPIC_API_KEY", "")
     )
     supabase_url: str = field(default_factory=lambda: os.environ.get("SUPABASE_URL", ""))
