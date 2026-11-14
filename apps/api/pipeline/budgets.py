@@ -11,5 +11,8 @@ generation can never exceed 6 + 2x2 = 10 calls.
 MAX_MODEL_CALLS = 6
 MAX_INSPECTOR_LOOPS = 2
 
-# Token cap per model call.
-MAX_TOKENS_PER_CALL = 8192
+# Token cap per model call. First live runs showed a full single-pass script
+# plus the model's thinking tokens (which count toward output) exceeding
+# 8192; 16384 clears it with margin while still bounding cost (~$0.33 max
+# output spend per opus call).
+MAX_TOKENS_PER_CALL = 16384
