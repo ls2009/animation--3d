@@ -20,20 +20,30 @@
 | ------ | ----- | -------- |
 | API tests | 20 | 1 |
 | Model calls on cache hit | 0 | — |
-| Live generations | 0 — blocked on API key (below) | — |
+| Live generations | 3/3 ready (table below) | 0 |
+
+### Live generations (2026-11-14, `claude-opus-5-5`, single-pass)
+
+| Topic | Audience | Status | Validator repairs | Cost (USD) | Latency |
+| ----- | -------- | ------ | ----------------- | ---------- | ------- |
+| how a turbocharger works | curious teens | ready (7 scenes, 11 actors) | 1 (`clamped_coord`) | $0.1997 | 89.5 s |
+| why the sky is blue | curious kids aged 10 | ready (7 scenes, 10 actors) | 0 | $0.2066 | 92.5 s |
+| compound interest | busy adult professionals | ready (6 scenes, 9 actors) | 0 | $0.2065 | 92.9 s |
+
+**Live finding — token cap raised 8192 → 16384.** The first live attempts (two per topic, ~$0.16 each) all failed typed `budget_exceeded`: every call returned exactly 8192 output tokens with `stop_reason: max_tokens`. On `claude-opus-5-5` adaptive thinking is always on and its tokens count toward `max_tokens`, so thinking plus a full script (~10K output tokens observed) cannot fit in 8192. `MAX_TOKENS_PER_CALL` was raised to 16384 (commit `b0df8f8`) mid-run; all three topics then succeeded on the first retry. Failed lessons re-queued on re-POST exactly as designed, and the error was typed end to end — no silent retries.
 
 ## Deviations from the prompt
-- **The three live end-to-end generations have not run yet.** This container has no Anthropic credential: `request_credential` refuses to store secrets for Anthropic's own hosts, and probing confirmed the session does not auto-authenticate general `api.anthropic.com` calls (401 without a key). The full plumbing was verified honestly in the browser — the status screen shows the real 401 as a typed failure. Nothing was mocked outside clearly-labeled unit tests. **The moment the key lands I will run the three fresh topics and append repairs + cost to this report.**
+- ~~**The three live end-to-end generations have not run yet.**~~ **Resolved 2026-11-14**: the key landed as `SINAA_MODEL_ACCESS` and the three generations ran live (table above). The original blocker note is kept for history: the container had no Anthropic credential and the status screen surfaced the real 401 as a typed failure; nothing was mocked outside clearly-labeled unit tests.
 - **Store may run on SQLite first**: Supabase activates automatically when its env vars are set; migrations remain unapplied until then (Phase 0 note stands).
 - Single-pass uses `claude-opus-5-5` (the current default model per Anthropic guidance); the Phase 5 crew keeps the mission's tiering (Opus-class Director via `SINAA_MODEL_COMPLEX`, Sonnet-class others via `SINAA_MODEL_DEFAULT`).
 
 ## Known gaps
-- Live generation metrics (repairs count, cost, latency) pending the API key.
+- ~~Live generation metrics (repairs count, cost, latency) pending the API key.~~ Done — table above.
 - GitHub Actions still blocked account-side (billing) — unchanged since STOP 0.
 
 ## Needs my decision
-- **Add `ANTHROPIC_API_KEY` to the environment** so I can run the live generations: in any session's title bar open the cloud-environment menu for **“3d animation learning”** → **Edit** → add environment variable `ANTHROPIC_API_KEY` with a key from console.anthropic.com. (Network-secret storage is refused for Anthropic hosts, so the variable route is the right one here.) New/resumed sessions pick it up; then say "run the generations".
-- Optional, before Phase 4-5: create the Supabase project and add `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` the same way.
+- ~~Add `ANTHROPIC_API_KEY` to the environment.~~ Done — the key propagates as `SINAA_MODEL_ACCESS` and live generation works.
+- Optional, before Phase 4-5: create the Supabase project and add `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` the same way. (Still open; the live runs recorded to the SQLite fallback.)
 
 ## Next phase preview
 - `packages/golden`: `topics.json` (36 topics as data), runner `pnpm golden:run` with caching off.
