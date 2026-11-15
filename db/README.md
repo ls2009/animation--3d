@@ -11,11 +11,18 @@ With the Supabase CLI (linked project):
 supabase db push
 ```
 
-Or directly with psql:
+Or directly with psql (apply ALL migrations, in order):
 
 ```bash
 psql "$SUPABASE_DB_URL" -f db/migrations/0001_init.sql
 ```
+
+```bash
+psql "$SUPABASE_DB_URL" -f db/migrations/0002_grants.sql
+```
+
+`0002_grants.sql` is required on hosted Supabase: policies sit on top of
+base table grants, and without it every write fails with 42501.
 
 Not applied in Phase 0 — no Supabase project is provisioned yet; credentials
 arrive before Phase 3.
