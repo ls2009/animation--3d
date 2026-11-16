@@ -2,11 +2,20 @@ import { STRUCT, box, coneG, cyl, group, put, sph, torus, type PropBuilder } fro
 
 export const science: Record<string, PropBuilder> = {
   atom: (c) => {
-    const g = group(put(sph(0.35), c, { y: 1, tinted: true }, { emissive: "#223355" }));
-    g.add(put(torus(0.85, 0.04), STRUCT.metal, { y: 1 }));
-    g.add(put(torus(0.85, 0.04), STRUCT.metal, { y: 1, rx: Math.PI / 3 }));
-    g.add(put(torus(0.85, 0.04), STRUCT.metal, { y: 1, rx: -Math.PI / 3 }));
-    g.add(put(sph(0.1), STRUCT.light, { x: 0.85, y: 1 }));
+    // Nucleus as a cluster of protons (tinted) and neutrons (light).
+    const g = group(
+      put(sph(0.22, 16), c, { x: 0.12, y: 1.08, tinted: true }, { emissive: "#223355", emissiveIntensity: 0.8 }),
+      put(sph(0.22, 16), c, { x: -0.14, y: 0.98, z: 0.08, tinted: true }, { emissive: "#223355", emissiveIntensity: 0.8 }),
+      put(sph(0.22, 16), STRUCT.light, { y: 1.1, z: -0.12 }),
+      put(sph(0.22, 16), STRUCT.light, { x: 0.02, y: 0.86, z: -0.04 }),
+    );
+    g.add(put(torus(0.85, 0.03, 8, 40), STRUCT.metal, { y: 1 }));
+    g.add(put(torus(0.85, 0.03, 8, 40), STRUCT.metal, { y: 1, rx: Math.PI / 3 }));
+    g.add(put(torus(0.85, 0.03, 8, 40), STRUCT.metal, { y: 1, rx: -Math.PI / 3 }));
+    // One glowing electron per orbit.
+    g.add(put(sph(0.09), "#9fd0ff", { x: 0.85, y: 1 }, { emissive: "#4a79b5", emissiveIntensity: 1.3 }));
+    g.add(put(sph(0.09), "#9fd0ff", { x: -0.5, y: 1.4, z: 0.7 }, { emissive: "#4a79b5", emissiveIntensity: 1.3 }));
+    g.add(put(sph(0.09), "#9fd0ff", { x: -0.26, y: 0.52, z: 0.82 }, { emissive: "#4a79b5", emissiveIntensity: 1.3 }));
     return g;
   },
 
@@ -91,16 +100,59 @@ export const science: Record<string, PropBuilder> = {
       put(cyl(0.06, 0.06, 1.2), c, { y: 0.95, tinted: true }),
     ),
 
-  battery: (c) =>
-    group(
-      put(cyl(0.55, 0.55, 1.8, 24), c, { y: 0.9, tinted: true }),
-      put(cyl(0.56, 0.56, 0.35, 24), STRUCT.dark, { y: 0.2 }),
-      put(cyl(0.18, 0.18, 0.2, 16), STRUCT.metal, { y: 1.9 }),
-    ),
+  battery: (c) => {
+    const g = group(
+      put(cyl(0.55, 0.55, 1.75, 24), c, { y: 0.88, tinted: true }, { roughness: 0.45 }),
+      put(cyl(0.56, 0.56, 0.3, 24), STRUCT.dark, { y: 0.17 }),
+      put(cyl(0.56, 0.56, 0.12, 24), STRUCT.metal, { y: 1.72 }, { metalness: 0.8 }),
+      put(cyl(0.18, 0.18, 0.18, 16), STRUCT.metal, { y: 1.86 }, { metalness: 0.8 }),
+      // Label seam.
+      put(torus(0.56, 0.02, 8, 28), STRUCT.dark, { y: 1.35, rx: Math.PI / 2 }),
+    );
+    // Charge-level pips.
+    for (let i = 0; i < 4; i++) {
+      g.add(put(box(0.22, 0.16, 0.06), "#58e07a", { y: 0.5 + i * 0.3, z: 0.54 }, { emissive: "#2a7a40", emissiveIntensity: 1.3 }));
+    }
+    return g;
+  },
 
   lightbulb: (c) =>
     group(
       put(cyl(0.22, 0.26, 0.5, 16), STRUCT.metal, { y: 0.25 }),
       put(sph(0.55), c, { y: 1.05, tinted: true }, { opacity: 0.65, emissive: "#5a5230", roughness: 0.2 }),
     ),
+
+  telescope: (c) =>
+    group(
+      put(cyl(0.06, 0.08, 1.4, 8), STRUCT.metal, { x: -0.4, y: 0.7, rz: 0.35 }),
+      put(cyl(0.06, 0.08, 1.4, 8), STRUCT.metal, { x: 0.4, y: 0.7, rz: -0.35 }),
+      put(cyl(0.06, 0.08, 1.4, 8), STRUCT.metal, { z: -0.4, y: 0.7, rx: -0.35 }),
+      put(cyl(0.24, 0.3, 1.8, 16), c, { y: 1.75, z: 0.1, rx: -0.7, tinted: true }, { metalness: 0.5, roughness: 0.3 }),
+      put(cyl(0.32, 0.32, 0.25, 16), STRUCT.dark, { y: 2.35, z: -0.47, rx: -0.7 }),
+      put(cyl(0.08, 0.08, 0.3, 10), STRUCT.dark, { y: 1.25, z: 0.62, rx: 0.9 }),
+      put(sph(0.12), "#bfe3ff", { y: 2.48, z: -0.58 }, { emissive: "#5a86b0", opacity: 0.9 }),
+    ),
+
+  bacteria: (c) => {
+    const body = put(sph(0.45, 16), c, { y: 0.5, tinted: true }, { roughness: 0.75, opacity: 0.95 });
+    body.scale.set(1.9, 1, 1);
+    const g = group(body);
+    // Flagella tails.
+    for (let t = 0; t < 2; t++) {
+      for (let s = 0; s < 3; s++) {
+        g.add(put(cyl(0.03, 0.045, 0.45, 6), c, {
+          x: -0.95 - s * 0.32, y: 0.5 + Math.sin(s * 1.8 + t * 2.5) * 0.18,
+          rz: Math.PI / 2 + Math.sin(s + t) * 0.5, tinted: true,
+        }));
+      }
+    }
+    // Pili dots on the membrane.
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2;
+      g.add(put(sph(0.05), STRUCT.light, {
+        x: Math.cos(a) * 0.8, y: 0.5 + Math.sin(a) * 0.42, z: Math.sin(a * 2) * 0.2,
+      }));
+    }
+    return g;
+  },
 };

@@ -6,7 +6,7 @@
  * Naming rule: lower-case, hyphenated, concrete nouns. No colour or size
  * adjectives — those are actor properties.
  */
-export const PROP_LIBRARY_VERSION = "1.0.0";
+export const PROP_LIBRARY_VERSION = "1.1.0";
 
 export type PropDomain =
   | "primitives"
@@ -76,7 +76,7 @@ export const PROP_META: PropMeta[] = [
   p("bee", "nature", ["insect"], ["animal"], { height: 1 }),
   p("apple", "nature", ["fruit"], ["plant", "food"], { height: 1.2 }),
 
-  // --- science (13) -----------------------------------------------------------
+  // --- science (15) -----------------------------------------------------------
   p("atom", "science", [], ["chemistry", "physics"]),
   p("molecule", "science", ["compound"], ["chemistry"]),
   p("electron", "science", ["charge"], ["physics", "electricity"], { height: 0.8 }),
@@ -90,6 +90,8 @@ export const PROP_META: PropMeta[] = [
   p("thermometer", "science", [], ["instrument", "temperature"], { footprint: 0.5 }),
   p("battery", "science", ["cell-battery", "lithium-battery"], ["electricity", "energy"]),
   p("lightbulb", "science", ["bulb", "lamp"], ["electricity", "light"]),
+  p("telescope", "science", ["observatory"], ["astronomy", "instrument"], { height: 2.2 }),
+  p("bacteria", "science", ["microbe", "bacterium"], ["biology", "microbe"], { height: 0.9, footprint: 1.8 }),
 
   // --- machines (13) -----------------------------------------------------------
   p("piston", "machines", [], ["engine", "automotive"]),
@@ -106,7 +108,7 @@ export const PROP_META: PropMeta[] = [
   p("pulley", "machines", [], ["mechanism"]),
   p("pump", "machines", ["compressor"], ["mechanism", "fluid"]),
 
-  // --- business (13) ------------------------------------------------------------
+  // --- business (14) ------------------------------------------------------------
   p("coin", "business", ["money"], ["finance"], { height: 0.4 }),
   p("banknote", "business", ["bill", "cash"], ["finance"], { height: 0.1, footprint: 2 }),
   p("bar-chart", "business", ["chart", "histogram"], ["data", "finance"]),
@@ -120,8 +122,9 @@ export const PROP_META: PropMeta[] = [
   p("vault", "business", ["safe"], ["finance"]),
   p("package", "business", ["parcel", "shipment"], ["commerce", "logistics"], { height: 1.2 }),
   p("person", "business", ["human", "figure", "customer", "buyer", "seller"], ["people"], { height: 2.4, footprint: 1 }),
+  p("bridge", "business", ["overpass"], ["infrastructure", "connection"], { height: 2, footprint: 4 }),
 
-  // --- tech (13) ------------------------------------------------------------------
+  // --- tech (18) ------------------------------------------------------------------
   p("laptop", "tech", ["computer", "client"], ["computing", "networking"], { height: 1.2, footprint: 2 }),
   p("server", "tech", ["server-rack", "host"], ["computing", "networking"], { height: 2.6, footprint: 1.4 }),
   p("router", "tech", ["switch-network", "gateway"], ["networking"], { height: 0.8, footprint: 2 }),
@@ -135,6 +138,11 @@ export const PROP_META: PropMeta[] = [
   p("cloud-server", "tech", ["cloud-computing"], ["computing", "networking"], { footprint: 3 }),
   p("shield", "tech", ["firewall"], ["security"]),
   p("globe", "tech", ["earth", "world", "dns-globe"], ["networking", "geography"]),
+  p("neural-network", "tech", ["neural-net", "ai-model", "network-graph"], ["ai", "computing"], { height: 2.6, footprint: 3 }),
+  p("robot", "tech", ["android", "bot"], ["ai", "machine"], { height: 2.6, footprint: 1.4 }),
+  p("circuit-board", "tech", ["pcb", "motherboard"], ["hardware", "computing"], { height: 0.4, footprint: 2.6 }),
+  p("sensor", "tech", ["detector", "camera-sensor"], ["hardware", "iot"], { height: 1.4, footprint: 0.9 }),
+  p("drone", "tech", ["quadcopter", "uav"], ["machine", "flight"], { height: 1.2, footprint: 2.4 }),
 
   // --- body (13) --------------------------------------------------------------------
   p("heart", "body", [], ["organ", "circulation"]),

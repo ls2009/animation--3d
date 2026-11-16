@@ -188,7 +188,20 @@ export const SceneSchema = z.object({
     .number()
     .min(LIMITS.minSceneDuration)
     .max(LIMITS.maxSceneDuration),
-  backdrop: z.enum(["lab", "nature", "space", "plain"]).default("lab"),
+  backdrop: z
+    .enum([
+      "lab",
+      "nature",
+      "space",
+      "plain",
+      "tech",
+      "body",
+      "finance",
+      "factory",
+      "sky",
+      "ocean",
+    ])
+    .default("lab"),
   /** One sentence: what the learner must SEE happen. Written by the Director,
    *  consumed by the Inspector as the scene's acceptance criterion. */
   beat: z.string().max(300).default(""),

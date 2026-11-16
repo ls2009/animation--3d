@@ -8,11 +8,12 @@ import * as THREE from "three";
 import type { Script } from "@sinaa/dsl";
 import { computeState } from "./state";
 import {
-  addStageFloor,
   addStageLights,
   applyActorVisuals,
   applyBackdrop,
+  configureRenderer,
   createFlowPool,
+  createStageEnvironment,
   mountStageActors,
   unmountStageActors,
   type StageActorNode,
@@ -30,10 +31,11 @@ export function createOffscreenStage(
   height: number,
 ): OffscreenStage {
   renderer.setSize(width, height, false);
+  configureRenderer(renderer);
   const scene3 = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 500);
   addStageLights(scene3);
-  const floor = addStageFloor(scene3);
+  const stageEnv = createStageEnvironment(scene3);
   const flowPool = createFlowPool(scene3);
 
   let mounted: Script | undefined;
@@ -48,7 +50,7 @@ export function createOffscreenStage(
       }
       const scene = script.scenes[sceneIndex];
       if (!scene) throw new RangeError(`scene ${sceneIndex} out of range`);
-      applyBackdrop(scene3, floor, scene.backdrop);
+      applyBackdrop(scene3, stageEnv, scene.backdrop);
 
       const state = computeState(script, sceneIndex, t);
       for (const [id, node] of nodes) {

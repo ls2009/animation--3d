@@ -23,8 +23,8 @@ const DOMAIN_COUNTS: Record<string, number> = {};
 for (const m of PROP_META) DOMAIN_COUNTS[m.domain] = (DOMAIN_COUNTS[m.domain] ?? 0) + 1;
 
 describe("catalogue", () => {
-  it("ships 90 props across 7 domains", () => {
-    expect(PROP_META).toHaveLength(90);
+  it("ships 98 props across 7 domains", () => {
+    expect(PROP_META).toHaveLength(98);
     expect(Object.keys(DOMAIN_COUNTS).sort()).toEqual(
       ["body", "business", "machines", "nature", "primitives", "science", "tech"],
     );

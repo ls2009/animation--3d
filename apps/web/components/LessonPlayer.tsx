@@ -136,7 +136,7 @@ export default function LessonPlayer({
         <canvas ref={canvasRef} className="block h-[300px] w-full touch-none sm:h-[420px]" />
         <div
           ref={labelsRef}
-          className="pointer-events-none absolute inset-0 overflow-hidden text-xs font-medium text-neutral-100 [&>div]:rounded [&>div]:bg-black/55 [&>div]:px-1.5 [&>div]:py-0.5"
+          className="pointer-events-none absolute inset-0 overflow-hidden"
         />
         <div
           data-testid="caption"

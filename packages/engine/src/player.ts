@@ -12,14 +12,16 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import type { Script } from "@sinaa/dsl";
 import { computeState, type ControlValues, type SceneState } from "./state";
 import {
-  addStageFloor,
   addStageLights,
   applyActorVisuals,
   applyBackdrop,
+  configureRenderer,
   createFlowPool,
+  createStageEnvironment,
   mountStageActors,
   unmountStageActors,
   type StageActorNode,
+  type StageEnvironment,
 } from "./stage";
 
 export interface PlayerOptions {
@@ -64,13 +66,29 @@ export function createPlayer(
 ): Player {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
   renderer.setPixelRatio(Math.min(globalThis.devicePixelRatio ?? 1, 2));
+  configureRenderer(renderer);
+
+  // Software-rasterized WebGL (SwiftShader/llvmpipe — no real GPU) cannot
+  // afford shadows or a 2x buffer at 60fps; drop to a lite profile there.
+  // Real GPUs and the deterministic headless path keep full quality.
+  try {
+    const gl = renderer.getContext();
+    const dbg = gl.getExtension("WEBGL_debug_renderer_info");
+    const gpu = dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : "";
+    if (/swiftshader|llvmpipe|software/i.test(gpu)) {
+      renderer.shadowMap.enabled = false;
+      renderer.setPixelRatio(1);
+    }
+  } catch {
+    // Keep full quality when the renderer string is unavailable.
+  }
 
   const scene3 = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 500);
   camera.position.set(14, 12, 30);
 
   addStageLights(scene3);
-  const floor = addStageFloor(scene3);
+  const stageEnv: StageEnvironment = createStageEnvironment(scene3);
   const flowPool = createFlowPool(scene3);
 
   const orbit = new OrbitControls(camera, canvas);
@@ -112,12 +130,24 @@ export function createPlayer(
     clearActors();
     actorNodes = mountStageActors(scene3, s);
     for (const actor of s.actors) {
+      // Text actors render their label as a 3D panel on the stage; an HTML
+      // overlay on top would duplicate it.
+      if (actor.kind === "text") continue;
       const labelEl = document.createElement("div");
       labelEl.className = "sinaa-label";
-      labelEl.style.position = "absolute";
-      labelEl.style.transform = "translate(-50%, -100%)";
-      labelEl.style.pointerEvents = "none";
-      labelEl.style.whiteSpace = "nowrap";
+      const st = labelEl.style;
+      st.position = "absolute";
+      st.transform = "translate(-50%, -100%)";
+      st.pointerEvents = "none";
+      st.whiteSpace = "nowrap";
+      st.padding = "3px 10px";
+      st.borderRadius = "999px";
+      st.background = "rgba(13, 17, 28, 0.82)";
+      st.border = "1px solid rgba(148, 180, 255, 0.35)";
+      st.color = "#eef2ff";
+      st.font = "600 13px/1.35 system-ui, sans-serif";
+      st.letterSpacing = "0.01em";
+      st.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.35)";
       labelsEl.appendChild(labelEl);
       labelEls.set(actor.id, labelEl);
     }
@@ -147,7 +177,7 @@ export function createPlayer(
   function applyState(state: SceneState): void {
     if (!script) return;
     const scene = script.scenes[sceneIndex]!;
-    applyBackdrop(scene3, floor, scene.backdrop);
+    applyBackdrop(scene3, stageEnv, scene.backdrop);
 
     const rect = canvas.getBoundingClientRect();
 

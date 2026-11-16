@@ -27,6 +27,7 @@ export interface MatOpts {
   metalness?: number;
   roughness?: number;
   emissive?: string;
+  emissiveIntensity?: number;
 }
 
 export function makeMat(color: string, opts: MatOpts = {}): THREE.MeshStandardMaterial {
@@ -38,6 +39,7 @@ export function makeMat(color: string, opts: MatOpts = {}): THREE.MeshStandardMa
     opacity: opts.opacity ?? 1,
   });
   if (opts.emissive) m.emissive = new THREE.Color(opts.emissive);
+  if (opts.emissiveIntensity !== undefined) m.emissiveIntensity = opts.emissiveIntensity;
   return m;
 }
 

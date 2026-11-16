@@ -43,14 +43,16 @@ export { createOffscreenStage } from "./offscreen";
 export type { OffscreenStage } from "./offscreen";
 export {
   BACKDROPS,
+  BACKDROP_NAMES,
   addStageLights,
-  addStageFloor,
   applyBackdrop,
   applyActorVisuals,
+  configureRenderer,
+  createStageEnvironment,
   mountStageActors,
   unmountStageActors,
   createFlowPool,
 } from "./stage";
-export type { StageActorNode, FlowPool } from "./stage";
+export type { StageActorNode, StageEnvironment, FlowPool, BackdropName } from "./stage";
 
 export { BUILTIN_LESSONS } from "./lessons";

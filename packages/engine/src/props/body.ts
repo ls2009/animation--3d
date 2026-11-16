@@ -2,23 +2,45 @@ import { STRUCT, coneG, cyl, group, put, sph, torus, type PropBuilder } from "./
 
 export const body: Record<string, PropBuilder> = {
   heart: (c) => {
-    const left = put(sph(0.55), c, { x: -0.3, y: 1.35, tinted: true });
-    const right = put(sph(0.55), c, { x: 0.3, y: 1.35, tinted: true });
-    const tip = put(coneG(0.72, 1.1, 20), c, { y: 0.55, rx: Math.PI, tinted: true });
-    return group(left, right, tip);
+    const left = put(sph(0.52, 20), c, { x: -0.28, y: 1.4, tinted: true }, { roughness: 0.55 });
+    const right = put(sph(0.52, 20), c, { x: 0.28, y: 1.4, tinted: true }, { roughness: 0.55 });
+    const tip = put(coneG(0.7, 1.15, 20), c, { y: 0.58, rx: Math.PI, tinted: true }, { roughness: 0.55 });
+    const g = group(left, right, tip);
+    // Aorta arch with branch vessels.
+    g.add(put(torus(0.3, 0.1, 10, 18), "#b24a52", { x: 0.1, y: 2 }, { roughness: 0.6 }));
+    g.add(put(cyl(0.05, 0.06, 0.3, 8), "#b24a52", { x: -0.08, y: 2.35 }, { roughness: 0.6 }));
+    g.add(put(cyl(0.05, 0.06, 0.3, 8), "#b24a52", { x: 0.1, y: 2.4 }, { roughness: 0.6 }));
+    g.add(put(cyl(0.05, 0.06, 0.3, 8), "#b24a52", { x: 0.28, y: 2.35 }, { roughness: 0.6 }));
+    // Pulmonary trunk.
+    g.add(put(cyl(0.12, 0.14, 0.45, 10), "#5a6fae", { x: -0.38, y: 1.95, rz: 0.4 }, { roughness: 0.6 }));
+    // Surface coronary vessels.
+    g.add(put(cyl(0.025, 0.03, 0.8, 6), "#e8e3da", { x: -0.05, y: 1.1, z: 0.46, rz: 0.45 }));
+    g.add(put(cyl(0.02, 0.028, 0.6, 6), "#e8e3da", { x: 0.25, y: 0.95, z: 0.42, rz: -0.4 }));
+    return g;
   },
 
   lungs: (c) => {
-    const l = put(sph(0.55), c, { x: -0.55, y: 0.85, tinted: true });
-    l.scale.set(0.8, 1.4, 0.7);
-    const r = put(sph(0.55), c, { x: 0.55, y: 0.85, tinted: true });
-    r.scale.set(0.8, 1.4, 0.7);
-    return group(
-      l, r,
-      put(cyl(0.12, 0.12, 0.9), STRUCT.light, { y: 1.65 }),
-      put(cyl(0.09, 0.09, 0.5), STRUCT.light, { x: -0.25, y: 1.25, rz: 0.8 }),
-      put(cyl(0.09, 0.09, 0.5), STRUCT.light, { x: 0.25, y: 1.25, rz: -0.8 }),
-    );
+    const g = group();
+    // Two lungs, each built from two overlapping lobes.
+    const lobes: [number, number, number, number][] = [
+      [-0.58, 0.85, 0.5, 1.35], [-0.48, 1.45, 0.42, 1], [0.58, 0.85, 0.5, 1.35], [0.48, 1.45, 0.42, 1],
+    ];
+    for (const [x, y, r, ys] of lobes) {
+      const lobe = put(sph(r, 18), c, { x, y, tinted: true }, { roughness: 0.65 });
+      lobe.scale.set(0.85, ys, 0.7);
+      g.add(lobe);
+    }
+    // Trachea with cartilage rings.
+    g.add(put(cyl(0.11, 0.11, 0.85, 12), STRUCT.light, { y: 1.85 }));
+    for (let i = 0; i < 4; i++) {
+      g.add(put(torus(0.12, 0.025, 8, 14), STRUCT.light, { y: 1.6 + i * 0.18, rx: Math.PI / 2 }));
+    }
+    // Bronchi branching into each lung.
+    g.add(put(cyl(0.08, 0.1, 0.55, 10), STRUCT.light, { x: -0.28, y: 1.28, rz: 0.75 }));
+    g.add(put(cyl(0.08, 0.1, 0.55, 10), STRUCT.light, { x: 0.28, y: 1.28, rz: -0.75 }));
+    g.add(put(cyl(0.05, 0.07, 0.4, 8), STRUCT.light, { x: -0.52, y: 1.05, rz: 0.4 }));
+    g.add(put(cyl(0.05, 0.07, 0.4, 8), STRUCT.light, { x: 0.52, y: 1.05, rz: -0.4 }));
+    return g;
   },
 
   "red-blood-cell": (c) => {

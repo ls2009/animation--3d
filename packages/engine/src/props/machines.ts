@@ -3,9 +3,18 @@ import { STRUCT, box, coneG, cyl, group, put, sph, torus, type PropBuilder } fro
 export const machines: Record<string, PropBuilder> = {
   piston: (c) =>
     group(
-      put(cyl(0.6, 0.6, 0.7, 24), c, { y: 1.65, tinted: true }, { metalness: 0.6, roughness: 0.35 }),
-      put(cyl(0.16, 0.16, 1.1), STRUCT.metal, { y: 0.75 }, { metalness: 0.7 }),
-      put(sph(0.22), STRUCT.dark, { y: 0.22 }),
+      // Crown with ring grooves.
+      put(cyl(0.6, 0.6, 0.75, 24), c, { y: 1.62, tinted: true }, { metalness: 0.65, roughness: 0.3 }),
+      put(torus(0.6, 0.025, 8, 28), STRUCT.dark, { y: 1.88, rx: Math.PI / 2 }),
+      put(torus(0.6, 0.025, 8, 28), STRUCT.dark, { y: 1.74, rx: Math.PI / 2 }),
+      // Skirt.
+      put(cyl(0.56, 0.56, 0.3, 24), c, { y: 1.18, tinted: true }, { metalness: 0.55, roughness: 0.4 }),
+      // Wrist pin through the skirt.
+      put(cyl(0.12, 0.12, 0.7, 12), STRUCT.metal, { y: 1.18, rx: Math.PI / 2 }, { metalness: 0.8 }),
+      // Connecting rod down to the big end.
+      put(box(0.22, 1, 0.14), STRUCT.metal, { y: 0.72, rz: 0.12 }, { metalness: 0.7 }),
+      put(torus(0.22, 0.08, 10, 18), STRUCT.dark, { y: 0.28 }),
+      put(cyl(0.14, 0.14, 0.5, 12), STRUCT.metal, { y: 0.28, rx: Math.PI / 2 }, { metalness: 0.8 }),
     ),
 
   "engine-cylinder": (c) =>
@@ -40,28 +49,46 @@ export const machines: Record<string, PropBuilder> = {
 
   gear: (c) => {
     const g = group(
-      put(cyl(0.8, 0.8, 0.3, 24), c, { y: 1, rx: Math.PI / 2, tinted: true }, { metalness: 0.6 }),
-      put(cyl(0.2, 0.2, 0.34, 16), STRUCT.dark, { y: 1, rx: Math.PI / 2 }),
+      put(cyl(0.85, 0.85, 0.3, 32), c, { y: 1, rx: Math.PI / 2, tinted: true }, { metalness: 0.65, roughness: 0.35 }),
+      put(cyl(0.26, 0.26, 0.38, 16), STRUCT.dark, { y: 1, rx: Math.PI / 2 }),
+      put(torus(0.55, 0.045, 8, 28), STRUCT.dark, { y: 1 }),
     );
-    for (let i = 0; i < 8; i++) {
-      const a = (i / 8) * Math.PI * 2;
-      g.add(put(box(0.25, 0.3, 0.25), c, {
-        x: Math.cos(a) * 0.9, y: 1, z: Math.sin(a) * 0.9, ry: -a, tinted: true,
-      }, { metalness: 0.6 }));
+    // Teeth around the rim, in the same vertical plane as the disc.
+    for (let i = 0; i < 12; i++) {
+      const a = (i / 12) * Math.PI * 2;
+      g.add(put(box(0.22, 0.26, 0.3), c, {
+        x: Math.cos(a) * 0.95, y: 1 + Math.sin(a) * 0.95, rz: a, tinted: true,
+      }, { metalness: 0.65, roughness: 0.35 }));
+    }
+    // Spokes between hub and rim.
+    for (let i = 0; i < 4; i++) {
+      const a = (i / 4) * Math.PI * 2 + Math.PI / 8;
+      g.add(put(box(0.5, 0.12, 0.2), STRUCT.metal, {
+        x: Math.cos(a) * 0.38, y: 1 + Math.sin(a) * 0.38, rz: a,
+      }, { metalness: 0.7 }));
     }
     return g;
   },
 
   turbine: (c) => {
-    const g = group(put(cyl(0.18, 0.18, 0.5, 12), STRUCT.dark, { y: 1, rx: Math.PI / 2 }));
-    for (let i = 0; i < 6; i++) {
-      const a = (i / 6) * Math.PI * 2;
-      const blade = put(box(0.18, 0.75, 0.05), c, {
-        x: Math.cos(a) * 0.45, y: 1 + Math.sin(a) * 0.45, rz: a + Math.PI / 2, ry: 0.5, tinted: true,
-      }, { metalness: 0.65, roughness: 0.3 });
-      g.add(blade);
+    const g = group(
+      put(cyl(0.22, 0.22, 0.6, 14), STRUCT.dark, { y: 1, rx: Math.PI / 2 }),
+      // Nose cone.
+      put(coneG(0.2, 0.35, 14), STRUCT.metal, { y: 1, z: 0.42, rx: Math.PI / 2 }, { metalness: 0.75 }),
+    );
+    // Two stages of angled blades.
+    for (let i = 0; i < 9; i++) {
+      const a = (i / 9) * Math.PI * 2;
+      g.add(put(box(0.2, 0.72, 0.06), c, {
+        x: Math.cos(a) * 0.52, y: 1 + Math.sin(a) * 0.52, rz: a + Math.PI / 2, ry: 0.55, tinted: true,
+      }, { metalness: 0.7, roughness: 0.25 }));
+      g.add(put(box(0.14, 0.3, 0.05), c, {
+        x: Math.cos(a) * 0.92, y: 1 + Math.sin(a) * 0.92, rz: a + Math.PI / 2, ry: 0.35, tinted: true,
+      }, { metalness: 0.7, roughness: 0.25 }));
     }
-    g.add(put(torus(0.95, 0.07), STRUCT.metal, { y: 1 }));
+    // Shroud rings.
+    g.add(put(torus(1, 0.08, 12, 36), STRUCT.metal, { y: 1 }, { metalness: 0.75 }));
+    g.add(put(torus(1, 0.045, 8, 36), STRUCT.dark, { y: 1, z: 0.16 }));
     return g;
   },
 

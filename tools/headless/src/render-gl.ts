@@ -6,7 +6,7 @@
 import { PNG } from "pngjs";
 import * as THREE from "three";
 import type { Script } from "@sinaa/dsl";
-import { createOffscreenStage } from "@sinaa/engine";
+import { configureRenderer, createOffscreenStage } from "@sinaa/engine";
 
 type GlFactory = (
   w: number,
@@ -45,6 +45,7 @@ export async function renderWithGl(
   } as unknown as HTMLCanvasElement;
 
   const renderer = new THREE.WebGLRenderer({ canvas, context: gl, antialias: true });
+  configureRenderer(renderer);
   const stage = createOffscreenStage(renderer, width, height);
 
   const pngs: Buffer[] = [];

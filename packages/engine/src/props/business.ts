@@ -104,13 +104,44 @@ export const business: Record<string, PropBuilder> = {
       put(box(0.4, 0.18, 1.34), STRUCT.light, { y: 0.55 }),
     ),
 
-  person: (c) =>
-    group(
-      put(cyl(0.32, 0.42, 1.1, 16), c, { y: 0.95, tinted: true }),
-      put(sph(0.34), "#e8c39e", { y: 1.95 }),
-      put(cyl(0.1, 0.1, 0.7, 10), c, { x: -0.45, y: 1.2, rz: 0.35, tinted: true }),
-      put(cyl(0.1, 0.1, 0.7, 10), c, { x: 0.45, y: 1.2, rz: -0.35, tinted: true }),
-      put(cyl(0.12, 0.12, 0.45, 10), STRUCT.dark, { x: -0.16, y: 0.22 }),
-      put(cyl(0.12, 0.12, 0.45, 10), STRUCT.dark, { x: 0.16, y: 0.22 }),
-    ),
+  bridge: (c) => {
+    const g = group(put(box(4, 0.15, 0.9), STRUCT.mid, { y: 1 }));
+    for (const x of [-1.2, 1.2]) {
+      g.add(put(box(0.18, 2, 0.18), c, { x: x - 0.12, y: 1, z: 0.3, tinted: true }));
+      g.add(put(box(0.18, 2, 0.18), c, { x: x + 0.12, y: 1, z: -0.3, tinted: true }));
+      g.add(put(box(0.55, 0.14, 0.75), c, { x, y: 2.02, tinted: true }));
+    }
+    // Suspension cables hanging from the anchor line down toward the deck.
+    for (let i = 0; i < 7; i++) {
+      const x = -1.8 + i * 0.6;
+      const drop = Math.max(0.2, 1.95 - (1.1 + Math.abs(x) * 0.28));
+      g.add(put(cyl(0.02, 0.02, drop, 6), STRUCT.light, { x, y: 1.95 - drop / 2 }));
+    }
+    g.add(put(cyl(0.025, 0.025, 4.2, 6), STRUCT.light, { y: 1.95, rz: Math.PI / 2 }));
+    return g;
+  },
+
+  person: (c) => {
+    const hair = put(sph(0.31, 14), STRUCT.dark, { y: 2.3 });
+    hair.scale.set(1, 0.7, 1);
+    return group(
+      // Legs and feet.
+      put(cyl(0.13, 0.15, 0.85, 10), STRUCT.dark, { x: -0.17, y: 0.45 }),
+      put(cyl(0.13, 0.15, 0.85, 10), STRUCT.dark, { x: 0.17, y: 0.45 }),
+      put(box(0.28, 0.12, 0.42), STRUCT.dark, { x: -0.17, y: 0.06, z: 0.06 }),
+      put(box(0.28, 0.12, 0.42), STRUCT.dark, { x: 0.17, y: 0.06, z: 0.06 }),
+      // Torso with shoulder cap.
+      put(cyl(0.3, 0.38, 0.95, 14), c, { y: 1.33, tinted: true }),
+      put(sph(0.3, 14), c, { y: 1.78, tinted: true }),
+      // Arms and hands.
+      put(cyl(0.09, 0.11, 0.75, 8), c, { x: -0.48, y: 1.4, rz: 0.2, tinted: true }),
+      put(cyl(0.09, 0.11, 0.75, 8), c, { x: 0.48, y: 1.4, rz: -0.2, tinted: true }),
+      put(sph(0.11), "#e8c39e", { x: -0.56, y: 0.98 }),
+      put(sph(0.11), "#e8c39e", { x: 0.56, y: 0.98 }),
+      // Neck, head, hair.
+      put(cyl(0.1, 0.12, 0.2, 10), "#e8c39e", { y: 1.95 }),
+      put(sph(0.3, 18), "#e8c39e", { y: 2.22 }),
+      hair,
+    );
+  },
 };

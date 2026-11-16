@@ -4,7 +4,7 @@
  */
 import * as THREE from "three";
 import { ScriptSchema } from "@sinaa/dsl";
-import { createOffscreenStage } from "@sinaa/engine";
+import { configureRenderer, createOffscreenStage } from "@sinaa/engine";
 
 export async function renderAll(
   scriptJson: string,
@@ -20,6 +20,7 @@ export async function renderAll(
     antialias: true,
     preserveDrawingBuffer: true,
   });
+  configureRenderer(renderer);
   const stage = createOffscreenStage(renderer, width, height);
   const out: string[] = [];
   for (let i = 0; i < script.scenes.length; i++) {

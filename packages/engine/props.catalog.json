@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "count": 90,
+  "version": "1.1.0",
+  "count": 98,
   "props": [
     {
       "name": "block",
@@ -507,6 +507,35 @@
       ]
     },
     {
+      "name": "telescope",
+      "domain": "science",
+      "aliases": [
+        "observatory"
+      ],
+      "height": 2.2,
+      "footprint": 1.5,
+      "transparent": false,
+      "tags": [
+        "astronomy",
+        "instrument"
+      ]
+    },
+    {
+      "name": "bacteria",
+      "domain": "science",
+      "aliases": [
+        "microbe",
+        "bacterium"
+      ],
+      "height": 0.9,
+      "footprint": 1.8,
+      "transparent": false,
+      "tags": [
+        "biology",
+        "microbe"
+      ]
+    },
+    {
       "name": "piston",
       "domain": "machines",
       "aliases": [],
@@ -870,6 +899,20 @@
       ]
     },
     {
+      "name": "bridge",
+      "domain": "business",
+      "aliases": [
+        "overpass"
+      ],
+      "height": 2,
+      "footprint": 4,
+      "transparent": false,
+      "tags": [
+        "infrastructure",
+        "connection"
+      ]
+    },
+    {
       "name": "laptop",
       "domain": "tech",
       "aliases": [
@@ -1055,6 +1098,82 @@
       "tags": [
         "networking",
         "geography"
+      ]
+    },
+    {
+      "name": "neural-network",
+      "domain": "tech",
+      "aliases": [
+        "neural-net",
+        "ai-model",
+        "network-graph"
+      ],
+      "height": 2.6,
+      "footprint": 3,
+      "transparent": false,
+      "tags": [
+        "ai",
+        "computing"
+      ]
+    },
+    {
+      "name": "robot",
+      "domain": "tech",
+      "aliases": [
+        "android",
+        "bot"
+      ],
+      "height": 2.6,
+      "footprint": 1.4,
+      "transparent": false,
+      "tags": [
+        "ai",
+        "machine"
+      ]
+    },
+    {
+      "name": "circuit-board",
+      "domain": "tech",
+      "aliases": [
+        "pcb",
+        "motherboard"
+      ],
+      "height": 0.4,
+      "footprint": 2.6,
+      "transparent": false,
+      "tags": [
+        "hardware",
+        "computing"
+      ]
+    },
+    {
+      "name": "sensor",
+      "domain": "tech",
+      "aliases": [
+        "detector",
+        "camera-sensor"
+      ],
+      "height": 1.4,
+      "footprint": 0.9,
+      "transparent": false,
+      "tags": [
+        "hardware",
+        "iot"
+      ]
+    },
+    {
+      "name": "drone",
+      "domain": "tech",
+      "aliases": [
+        "quadcopter",
+        "uav"
+      ],
+      "height": 1.2,
+      "footprint": 2.4,
+      "transparent": false,
+      "tags": [
+        "machine",
+        "flight"
       ]
     },
     {

@@ -21,12 +21,13 @@ const fourStrokeEngine: ScriptInput = {
     { id: "crank", prop: "crankshaft", label: "Crankshaft", color: "e", x: 0, y: -1, z: 0, size: 2.2 },
     { id: "fuel", prop: "flask", label: "Fuel mix", color: "o", x: -8, y: 0, z: 2, size: 2.5 },
     { id: "exh", prop: "cloud", label: "Exhaust", color: "f", x: 8, y: 6, z: 1, size: 2, hidden: true },
+    { id: "stroke_t", kind: "text", label: "The 4 strokes", color: "c", x: 0, y: 11.5, z: 0, size: 1.3, hidden: true },
   ],
   scenes: [
     {
       title: "Meet the engine",
       duration: 10,
-      backdrop: "lab",
+      backdrop: "factory",
       beat: "The camera circles the cylinder so the learner sees piston, valves, spark plug and crankshaft as one connected machine",
       narration: [
         { t: 0, text: "This is one cylinder of a car engine. Almost every car on the road breathes through this exact dance." },
@@ -44,7 +45,7 @@ const fourStrokeEngine: ScriptInput = {
     {
       title: "Stroke 1: Intake",
       duration: 12,
-      backdrop: "lab",
+      backdrop: "factory",
       beat: "The intake valve lifts open, the piston slides down, and fuel-air particles stream from the flask into the cylinder",
       narration: [
         { t: 0, text: "Stroke one: intake. The intake valve opens." },
@@ -52,6 +53,9 @@ const fourStrokeEngine: ScriptInput = {
       ],
       keyFact: "Intake: valve open, piston down, cylinder fills with fuel-air mix.",
       steps: [
+        { action: "show", actor: "stroke_t", t: 0.5, dur: 1 },
+        { action: "label", actor: "stroke_t", t: 0.5, text: "1 · Intake" },
+        { action: "move", actor: "stroke_t", t: 3, dur: 5, to: { x: -3, y: 10.5, z: 0 } },
         { action: "move", actor: "vin", t: 1, dur: 1.5, to: { x: -1.6, y: 9.4, z: 0 } },
         { action: "move", actor: "pis", t: 3, dur: 5, to: { x: 0, y: 1, z: 0 } },
         { action: "flow", from: "fuel", to: "cyl", t: 3, dur: 7, count: 10, shape: "drop", color: "o" },
@@ -62,7 +66,7 @@ const fourStrokeEngine: ScriptInput = {
     {
       title: "Stroke 2: Compression",
       duration: 10,
-      backdrop: "lab",
+      backdrop: "factory",
       beat: "Both valves sit closed while the piston rises and squeezes the mixture into a small, highlighted space at the top",
       narration: [
         { t: 0, text: "Stroke two: compression. Both valves seal shut." },
@@ -70,6 +74,9 @@ const fourStrokeEngine: ScriptInput = {
       ],
       keyFact: "Compression: valves closed, piston up, mixture squeezed ~10x smaller.",
       steps: [
+        { action: "show", actor: "stroke_t", t: 0.5, dur: 1 },
+        { action: "label", actor: "stroke_t", t: 0.5, text: "2 · Compression" },
+        { action: "pulse", actor: "stroke_t", t: 6, dur: 2, scale: 1.25, times: 2 },
         { action: "move", actor: "pis", t: 2, dur: 4, to: { x: 0, y: 5.5, z: 0 } },
         { action: "highlight", actor: "cyl", t: 6, dur: 3 },
         { action: "rotate", actor: "crank", t: 2, dur: 6, axis: "z", turns: 0.5 },
@@ -79,7 +86,7 @@ const fourStrokeEngine: ScriptInput = {
     {
       title: "Stroke 3: Power",
       duration: 12,
-      backdrop: "lab",
+      backdrop: "factory",
       beat: "The spark plug flashes, the piston is driven down hard, and the crankshaft visibly accelerates — the only stroke that makes power",
       narration: [
         { t: 0, text: "Stroke three: power. The spark plug fires." },
@@ -88,6 +95,9 @@ const fourStrokeEngine: ScriptInput = {
       ],
       keyFact: "Power: spark ignites the mix; the explosion drives the piston down. The other three strokes exist to serve this one.",
       steps: [
+        { action: "show", actor: "stroke_t", t: 0.5, dur: 1 },
+        { action: "label", actor: "stroke_t", t: 0.5, text: "3 · Power" },
+        { action: "pulse", actor: "stroke_t", t: 1.5, dur: 1.5, scale: 1.4, times: 2 },
         { action: "pulse", actor: "spk", t: 1, dur: 1.5, scale: 1.8, times: 3 },
         { action: "highlight", actor: "spk", t: 1, dur: 2 },
         { action: "color", actor: "cyl", t: 1.5, dur: 1, to: "o" },
@@ -100,7 +110,7 @@ const fourStrokeEngine: ScriptInput = {
     {
       title: "Stroke 4: Exhaust",
       duration: 11,
-      backdrop: "lab",
+      backdrop: "factory",
       beat: "The exhaust valve opens and the rising piston pushes a stream of burnt-gas particles out toward the exhaust cloud",
       narration: [
         { t: 0, text: "Stroke four: exhaust. The exhaust valve opens." },
@@ -108,6 +118,8 @@ const fourStrokeEngine: ScriptInput = {
       ],
       keyFact: "Exhaust: exhaust valve open, piston up, burnt gas pushed out.",
       steps: [
+        { action: "show", actor: "stroke_t", t: 0.5, dur: 1 },
+        { action: "label", actor: "stroke_t", t: 0.5, text: "4 · Exhaust" },
         { action: "move", actor: "vex", t: 1, dur: 1.5, to: { x: 1.6, y: 9.4, z: 0 } },
         { action: "show", actor: "exh", t: 3, dur: 2 },
         { action: "move", actor: "pis", t: 3, dur: 4, to: { x: 0, y: 5.5, z: 0 } },
@@ -119,7 +131,7 @@ const fourStrokeEngine: ScriptInput = {
     {
       title: "Why it matters",
       duration: 10,
-      backdrop: "lab",
+      backdrop: "factory",
       beat: "The whole cycle repeats quickly with the crankshaft spinning continuously while a counter tallies strokes — suck, squeeze, bang, blow",
       narration: [
         { t: 0, text: "Suck, squeeze, bang, blow — thousands of times a minute, in every cylinder." },
@@ -127,6 +139,9 @@ const fourStrokeEngine: ScriptInput = {
       ],
       keyFact: "The four strokes repeat continuously; engine speed is just how fast this cycle runs.",
       steps: [
+        { action: "show", actor: "stroke_t", t: 1, dur: 1 },
+        { action: "label", actor: "stroke_t", t: 1, text: "Suck · Squeeze · Bang · Blow" },
+        { action: "pulse", actor: "stroke_t", t: 3, dur: 5, scale: 1.15, times: 4 },
         { action: "camera", t: 1, dur: 5, to: { x: 16, y: 12, z: 30 }, look: { x: 0, y: 3, z: 0 } },
         { action: "rotate", actor: "crank", t: 1, dur: 9, axis: "z", turns: 6 },
         { action: "count", actor: "crank", t: 1, dur: 8, from: 1, to: 4, prefix: "stroke " },
@@ -188,6 +203,7 @@ const photosynthesis: ScriptInput = {
     { id: "air", prop: "cloud", label: "Air (CO2)", color: "f", x: 8, y: 9, z: -2, size: 2.5 },
     { id: "sugar", prop: "apple", label: "Sugar store", color: "d", x: 6, y: 0, z: 4, size: 2, hidden: true },
     { id: "oxy", prop: "cloud", label: "Oxygen out", color: "g", x: 9, y: 4, z: 3, size: 2, hidden: true },
+    { id: "eq_t", kind: "text", label: "Light + H2O + CO2", color: "b", x: 0, y: 10, z: -2, size: 1.2, hidden: true },
   ],
   scenes: [
     {
@@ -253,6 +269,8 @@ const photosynthesis: ScriptInput = {
         { action: "flow", from: "sun", to: "leaf", t: 1, dur: 9, count: 12, shape: "sphere", color: "c" },
         { action: "highlight", actor: "leaf", t: 4, dur: 5 },
         { action: "color", actor: "leaf", t: 4, dur: 3, to: "#58d68d" },
+        { action: "show", actor: "eq_t", t: 1, dur: 1.5 },
+        { action: "move", actor: "eq_t", t: 3, dur: 5, to: { x: 0, y: 8.5, z: -1 } },
       ],
     },
     {
@@ -273,6 +291,9 @@ const photosynthesis: ScriptInput = {
         { action: "flow", from: "leaf", to: "oxy", t: 6, dur: 6, count: 8, shape: "sphere", color: "g" },
         { action: "count", actor: "sugar", t: 2, dur: 8, from: 0, to: 6, suffix: " sugar" },
         { action: "grow", actor: "sugar", t: 4, dur: 6, to: 3 },
+        { action: "show", actor: "eq_t", t: 1, dur: 1.5 },
+        { action: "label", actor: "eq_t", t: 1, text: "→ Sugar + O2" },
+        { action: "move", actor: "eq_t", t: 3, dur: 6, to: { x: 5, y: 8.5, z: 0 } },
       ],
     },
     {
@@ -289,6 +310,9 @@ const photosynthesis: ScriptInput = {
         { action: "camera", t: 1, dur: 6, to: { x: 14, y: 10, z: 28 }, look: { x: 0, y: 4, z: 0 } },
         { action: "highlight", actor: "leaf", t: 3, dur: 4 },
         { action: "rotate", actor: "leaf", t: 2, dur: 7, axis: "y", turns: 1 },
+        { action: "show", actor: "eq_t", t: 1, dur: 1.5 },
+        { action: "label", actor: "eq_t", t: 1, text: "Light + H2O + CO2 → Sugar + O2" },
+        { action: "pulse", actor: "eq_t", t: 4, dur: 3, scale: 1.2, times: 2 },
       ],
     },
   ],
@@ -345,12 +369,13 @@ const tcpHandshake: ScriptInput = {
     { id: "syn", prop: "packet", label: "SYN", color: "c", x: -10, y: 0, z: 2, size: 1.4, hidden: true },
     { id: "synack", prop: "packet", label: "SYN-ACK", color: "b", x: 10, y: 0, z: 2, size: 1.4, hidden: true },
     { id: "ack", prop: "packet", label: "ACK", color: "g", x: -10, y: 0, z: 2, size: 1.4, hidden: true },
+    { id: "msg_t", kind: "text", label: "SYN →", color: "c", x: -10, y: 4.5, z: 2, size: 1.2, hidden: true },
   ],
   scenes: [
     {
       title: "Two machines, no trust yet",
       duration: 10,
-      backdrop: "space",
+      backdrop: "tech",
       beat: "A laptop and a server face each other across empty space; both are highlighted but nothing travels yet — no connection exists",
       narration: [
         { t: 0, text: "Before any web page loads, two machines that have never met must agree to talk." },
@@ -366,7 +391,7 @@ const tcpHandshake: ScriptInput = {
     {
       title: "Step 1: SYN",
       duration: 10,
-      backdrop: "space",
+      backdrop: "tech",
       beat: "A single SYN packet appears at the laptop and travels all the way across to the server, which lights up on arrival",
       narration: [
         { t: 0, text: "Step one. The client sends a SYN — 'synchronize' — packet. It means: I want to talk, and here is my starting sequence number." },
@@ -375,15 +400,18 @@ const tcpHandshake: ScriptInput = {
       keyFact: "SYN = the client asks to connect and shares its sequence number.",
       steps: [
         { action: "show", actor: "syn", t: 1, dur: 1 },
+        { action: "show", actor: "msg_t", t: 1, dur: 1 },
         { action: "move", actor: "syn", t: 2, dur: 5, to: { x: 10, y: 0, z: 2 } },
+        { action: "move", actor: "msg_t", t: 2, dur: 5, to: { x: 10, y: 4.5, z: 2 } },
         { action: "highlight", actor: "server", t: 7, dur: 2 },
         { action: "hide", actor: "syn", t: 8, dur: 1.5 },
+        { action: "hide", actor: "msg_t", t: 8, dur: 1.5 },
       ],
     },
     {
       title: "Step 2: SYN-ACK",
       duration: 10,
-      backdrop: "space",
+      backdrop: "tech",
       beat: "A SYN-ACK packet travels back from the server to the laptop, which lights up on arrival — the server both answers and asks",
       narration: [
         { t: 0, text: "Step two. The server replies with a SYN-ACK: 'I hear you' — the ACK — 'and I want to talk too' — its own SYN." },
@@ -392,15 +420,20 @@ const tcpHandshake: ScriptInput = {
       keyFact: "SYN-ACK = the server confirms the client's request AND makes its own.",
       steps: [
         { action: "show", actor: "synack", t: 1, dur: 1 },
+        { action: "move", actor: "msg_t", t: 0, dur: 0.1, to: { x: 10, y: 4.5, z: 2 } },
+        { action: "show", actor: "msg_t", t: 1, dur: 1 },
+        { action: "label", actor: "msg_t", t: 1, text: "← SYN-ACK" },
+        { action: "move", actor: "msg_t", t: 2, dur: 5, to: { x: -10, y: 4.5, z: 2 } },
         { action: "move", actor: "synack", t: 2, dur: 5, to: { x: -10, y: 0, z: 2 } },
         { action: "highlight", actor: "client", t: 7, dur: 2 },
         { action: "hide", actor: "synack", t: 8, dur: 1.5 },
+        { action: "hide", actor: "msg_t", t: 8, dur: 1.5 },
       ],
     },
     {
       title: "Step 3: ACK",
       duration: 10,
-      backdrop: "space",
+      backdrop: "tech",
       beat: "A final ACK packet crosses from laptop to server and both machines glow together — the connection now exists on both sides",
       narration: [
         { t: 0, text: "Step three. The client sends a final ACK: 'I heard your answer.'" },
@@ -410,6 +443,9 @@ const tcpHandshake: ScriptInput = {
       keyFact: "ACK = the client confirms the server's reply; both sides have now proven they can send AND receive.",
       steps: [
         { action: "show", actor: "ack", t: 1, dur: 1 },
+        { action: "show", actor: "msg_t", t: 1, dur: 1 },
+        { action: "label", actor: "msg_t", t: 1, text: "ACK →" },
+        { action: "move", actor: "msg_t", t: 2, dur: 4, to: { x: 10, y: 4.5, z: 2 } },
         { action: "move", actor: "ack", t: 2, dur: 4, to: { x: 10, y: 0, z: 2 } },
         { action: "highlight", actor: "client", t: 6, dur: 3 },
         { action: "highlight", actor: "server", t: 6, dur: 3 },
@@ -419,7 +455,7 @@ const tcpHandshake: ScriptInput = {
     {
       title: "Connected: data flows",
       duration: 11,
-      backdrop: "space",
+      backdrop: "tech",
       beat: "A continuous stream of data packets flows between laptop and server in both directions — the payoff of the handshake",
       narration: [
         { t: 0, text: "Handshake done. Now — and only now — the real data flows: web pages, video, this very lesson." },
@@ -436,7 +472,7 @@ const tcpHandshake: ScriptInput = {
     {
       title: "Why three and not two?",
       duration: 12,
-      backdrop: "space",
+      backdrop: "tech",
       beat: "The scene replays a two-message attempt: the server's reply is shaken and the server left dim and waiting, showing why the third message exists",
       narration: [
         { t: 0, text: "Could two messages be enough? Imagine the server's reply gets lost." },

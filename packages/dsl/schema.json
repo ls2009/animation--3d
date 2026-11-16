@@ -142,7 +142,13 @@
                   "lab",
                   "nature",
                   "space",
-                  "plain"
+                  "plain",
+                  "tech",
+                  "body",
+                  "finance",
+                  "factory",
+                  "sky",
+                  "ocean"
                 ],
                 "default": "lab"
               },

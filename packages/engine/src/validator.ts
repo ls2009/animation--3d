@@ -179,10 +179,13 @@ export function validateScript(raw: unknown, options: ValidateOptions = {}): Val
     if (duration !== dur0) {
       repair("clamped_duration", `${path}.duration`, `clamped ${dur0}s to ${duration}s`);
     }
+    const BACKDROP_SET = new Set([
+      "lab", "nature", "space", "plain", "tech", "body", "finance", "factory", "sky", "ocean",
+    ]);
     let backdrop: Scene["backdrop"] = "lab";
     if (s.backdrop !== undefined) {
-      if (s.backdrop === "lab" || s.backdrop === "nature" || s.backdrop === "space" || s.backdrop === "plain") {
-        backdrop = s.backdrop;
+      if (typeof s.backdrop === "string" && BACKDROP_SET.has(s.backdrop)) {
+        backdrop = s.backdrop as Scene["backdrop"];
       } else {
         repair("bad_backdrop", `${path}.backdrop`, `unknown backdrop "${String(s.backdrop)}", defaulted to lab`);
       }
